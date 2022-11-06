@@ -1,0 +1,2 @@
+rs.enterprise.paymentserviceprovider.spi.impl.PaypalPaymentServiceProvider
+rs.enterprise.paymentserviceprovider.spi.impl.BitcoinPaymentServiceProvider
