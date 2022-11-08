@@ -26,18 +26,16 @@ func IssuerRequestHandler(w http.ResponseWriter, r *http.Request) {
 	bankAccount, err := repository.FindBankAccount(bankRequest.Pan, bankRequest.SecurityCode, bankRequest.CardHolderName, bankRequest.ExpiryDate)
 
 	var state dto.TransactionState
-	if err != nil {
-		state = dto.ERROR
-	} else {
+	state = dto.ERROR
+	if err == nil {
 		if bankAccount.Balance >= bankRequest.Amount {
-			state = dto.SUCCESS
 			err := repository.UpdateAccountBalance(bankAccount.Balance - bankRequest.Amount, bankAccount.ID)
-			if err != nil {
-				state = dto.ERROR
+			if err == nil {
+				state = dto.SUCCESS
 			}
 		} else {
 			state = dto.FAILED
-		}
+		}	
 	}
 	
 	bankResponse := dto.IssuerBankResponse{MerchantOrderId: bankRequest.MerchantOrderId, 
