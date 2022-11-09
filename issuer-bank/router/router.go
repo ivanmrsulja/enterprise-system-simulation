@@ -10,7 +10,7 @@ import (
 
 func HandleRequests() {
 	router := mux.NewRouter()
-	router.HandleFunc("/api/issuer-bank", handler.IssuerRequestHandler).Methods("PUT")
+	router.HandleFunc("/api/issuer-bank", handler.IssuerRequestHandler).Methods("PATCH")
 
-	log.Fatal(http.ListenAndServeTLS(":8082", "ssl/test.cer", "ssl/test.key", router))
+	log.Fatal(http.ListenAndServeTLS(":8084", "ssl/selfsigned.cer", "ssl/selfsigned.key", router))
 }

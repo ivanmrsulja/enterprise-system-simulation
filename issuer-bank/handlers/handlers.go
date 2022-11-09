@@ -46,8 +46,8 @@ func IssuerRequestHandler(w http.ResponseWriter, r *http.Request) {
 								   			IssuerTimestamp: time.Now().String(),
 								   			TransactionState: state}
 	
-	fields := util.ExtractFieldsForLogging(bankResponse)
-	util.LogHttpRequest(r, "IssuerRequestHandler", fields)
+	fields := util.ExtractFieldsForLogging(&bankResponse)
+	util.LogHttpRequest(r, "IssuerRequestHandler", &fields)
 
 	json.NewEncoder(w).Encode(bankResponse)
 }

@@ -9,7 +9,7 @@ import (
 
 	log "log"
 	logger "github.com/sirupsen/logrus"
-	dto "github.com/ivanmrsulja/enterprise-system-simulation/issuer-bank/dtos"
+	dto "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/dtos"
 )
 
 func ConfigureLogging() {
@@ -68,7 +68,17 @@ func LogHttpRequest(request *http.Request, handlerName string, fields *map[strin
 	base.Info("HTTP request - ", handlerName)
 }
 
-func ExtractFieldsForLogging(bankResponse *dto.IssuerBankResponse) map[string]string {
+func ExtractRequestFieldsForLogging(bankResponse *dto.IssuerBankRequest) map[string]string {
+	fields := make(map[string]string)
+	fields["MerchantOrderId"] = strconv.Itoa(bankResponse.MerchantOrderId)
+	fields["PaymentId"] = strconv.Itoa(bankResponse.PaymentId)
+	fields["AcquirerOrderId"] = strconv.Itoa(bankResponse.AcquirerOrderId)
+	fields["AcquirerTimestamp"] = bankResponse.AcquirerTimestamp
+
+	return fields
+}
+
+func ExtractResponseFieldsForLogging(bankResponse *dto.IssuerBankResponse) map[string]string {
 	fields := make(map[string]string)
 	fields["MerchantOrderId"] = strconv.Itoa(bankResponse.MerchantOrderId)
 	fields["PaymentId"] = strconv.Itoa(bankResponse.PaymentId)
