@@ -7,7 +7,6 @@ import (
 	util "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/util"
 )
 
-
 func FindIssuerBank(pan string) (model.BankName, error) {
 	var redirect model.RedirectTable
 

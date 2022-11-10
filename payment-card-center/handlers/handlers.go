@@ -1,40 +1,67 @@
 package handlers
 
 import (
-	"encoding/json"
-	"net/http"
 	"bytes"
+	"encoding/json"
+	"io"
 	"log"
+	"net/http"
 
-	"gopkg.in/validator.v2"
 	dto "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/dtos"
-	util "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/util"
 	model "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/model"
 	repository "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/repository"
+	util "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/util"
+	"gopkg.in/validator.v2"
 )
 
 func IssuerRequestHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	// Validate request
 	var bankRequest dto.IssuerBankRequest
 	json.NewDecoder(r.Body).Decode(&bankRequest)
-
-	w.Header().Set("Content-Type", "application/json")
 	if errs := validator.Validate(bankRequest); errs != nil {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: errs.Error(), StatusCode: http.StatusNotFound})
 		return
 	}
 
+	// Log request
 	fields := util.ExtractRequestFieldsForLogging(&bankRequest)
-	util.LogHttpRequest(r, "IssuerRequestHandler - IssuerBankResponse", &fields)
+	util.LogHttpRequest(r, "IssuerRequestHandler - IssuerBankRequest", &fields)
 
+	// Redirect request to issuer bank
 	var buf bytes.Buffer
-    err := json.NewEncoder(&buf).Encode(bankRequest)
-    if err != nil {
-        log.Println(err)
-    }
+	err := json.NewEncoder(&buf).Encode(bankRequest)
+	if err != nil {
+		log.Println(err)
+	}
 
 	bank, _ := repository.FindIssuerBank(bankRequest.Pan) // Handle error
+	host := chooseIssuerBank(bank)
+	req, _ := http.NewRequest(http.MethodPatch, host, &buf)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("X-Auth-Token", util.ApiKey)
+	client := &http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
 
+	// Log response
+	var bankResponse dto.IssuerBankResponse
+	json.NewDecoder(response.Body).Decode(&bankResponse)
+	fields = util.ExtractResponseFieldsForLogging(&bankResponse)
+	util.LogHttpRequest(r, "IssuerRequestHandler - IssuerBankResponse", &fields)
+
+	// Delegate response
+	restoreResponseBody(response, &bankResponse)
+	util.DelegateResponse(response, w)
+}
+
+func chooseIssuerBank(bank model.BankName) string {
 	host := ""
 	switch bank {
 	case model.BANK1:
@@ -42,20 +69,15 @@ func IssuerRequestHandler(w http.ResponseWriter, r *http.Request) {
 	case model.BANK2:
 		host = util.BaseIssuerBank2PathRoundRobin.Next().Host
 	}
+	return host
+}
 
-	req, _ := http.NewRequest(http.MethodPatch, host, &buf)
-	req.Header.Set("Accept", "application/json")
-	client := &http.Client{}
-	response, err := client.Do(req)
-
+func restoreResponseBody(response *http.Response, bankResponse *dto.IssuerBankResponse) {
+	var responseBuffer bytes.Buffer
+	err := json.NewEncoder(&responseBuffer).Encode(*bankResponse)
 	if err != nil {
 		log.Println(err)
-		w.WriteHeader(http.StatusGatewayTimeout)
-		return
 	}
-	
-	// fields = util.ExtractResponseFieldsForLogging(&bankResponse)
-	// util.LogHttpRequest(r, "IssuerRequestHandler - IssuerBankResponse", &fields)
 
-	util.DelegateResponse(response, w)
+	response.Body = io.NopCloser(bytes.NewReader(responseBuffer.Bytes()))
 }

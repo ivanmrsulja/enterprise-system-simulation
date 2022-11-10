@@ -4,7 +4,7 @@ import (
 	"log"
 	"math/rand"
 	"time"
-	
+
 	router "github.com/ivanmrsulja/enterprise-system-simulation/issuer-bank/router"
 	util "github.com/ivanmrsulja/enterprise-system-simulation/issuer-bank/util"
 )
@@ -17,6 +17,7 @@ func main() {
 	log.Println("Starting server...")
 
 	util.ConnectToDatabase()
+	util.LoadApiKey()
 	router.HandleRequests()
 	defer util.Db.Close()
 }

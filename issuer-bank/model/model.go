@@ -7,9 +7,9 @@ import (
 type BankAccount struct {
 	gorm.Model
 
-	Pan string
-	SecurityCode string
+	Pan            string
+	SecurityCode   string
 	CardHolderName string
-	ExpiryDate string
-	Balance float64
+	ExpiryDate     string
+	Balance        float64
 }

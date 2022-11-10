@@ -1,25 +1,26 @@
 package util
 
 import (
-	"os"
-	"os/signal"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
 
 	log "log"
-	logger "github.com/sirupsen/logrus"
+
 	dto "github.com/ivanmrsulja/enterprise-system-simulation/payment-card-center/dtos"
+	logger "github.com/sirupsen/logrus"
 )
 
 func ConfigureLogging() {
-	logfileSystem, err := os.OpenFile("logs/system_logs.txt", os.O_WRONLY | os.O_CREATE | os.O_APPEND, 0644)
+	logfileSystem, err := os.OpenFile("logs/system_logs.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.SetOutput(logfileSystem)
 
-	logfileReqests, err := os.OpenFile("logs/request_logs.txt", os.O_WRONLY | os.O_CREATE | os.O_APPEND, 0644)
+	logfileReqests, err := os.OpenFile("logs/request_logs.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +34,7 @@ func ConfigureLogging() {
 func configureGracefulShutdown() {
 	sigint := make(chan os.Signal, 1)
 	signal.Notify(sigint, os.Interrupt)
-	go func(){
+	go func() {
 		for sig := range sigint {
 			// sig is a ^C
 			log.Println("Signal -", sig, ". Shutting down gracefully...")
@@ -50,12 +51,12 @@ func LogHttpRequest(request *http.Request, handlerName string, fields *map[strin
 	}
 
 	userIP := net.ParseIP(ip)
-    base := logger.WithFields(
-        logger.Fields{
-            "address": userIP,
-            "port": port,
-        },
-    )
+	base := logger.WithFields(
+		logger.Fields{
+			"address": userIP,
+			"port":    port,
+		},
+	)
 
 	for key, value := range *fields {
 		base = base.WithFields(
