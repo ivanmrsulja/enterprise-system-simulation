@@ -10,7 +10,7 @@ import (
 
 var (
 	accounts = []model.BankAccount{
-		{Pan: Bytes2StrRaw(Hash("1111131231")), SecurityCode: Bytes2StrRaw(Hash("456")), CardHolderName: Bytes2StrRaw(Hash("Jovan Jovanovic")), ExpiryDate: Bytes2StrRaw(Hash("05/23")), Balance: 10000},
+		{Pan: Bytes2StrRaw(Hash("1111111231")), SecurityCode: Bytes2StrRaw(Hash("456")), CardHolderName: Bytes2StrRaw(Hash("Jovan Jovanovic")), ExpiryDate: Bytes2StrRaw(Hash("05/23")), Balance: 10000},
 		{Pan: Bytes2StrRaw(Hash("1111113213")), SecurityCode: Bytes2StrRaw(Hash("654")), CardHolderName: Bytes2StrRaw(Hash("Milovan Jovic")), ExpiryDate: Bytes2StrRaw(Hash("07/23")), Balance: 20000},
 		{Pan: Bytes2StrRaw(Hash("1111111111")), SecurityCode: Bytes2StrRaw(Hash("725")), CardHolderName: Bytes2StrRaw(Hash("Vesna Savic")), ExpiryDate: Bytes2StrRaw(Hash("10/24")), Balance: 30000},
 	}

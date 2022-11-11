@@ -14,5 +14,5 @@ func HandleRequests() {
 	router.HandleFunc("/api/acquirer-bank/qr-code-payment", handler.QrCodePaymentHandler).Methods("PATCH")
 	router.HandleFunc("/api/acquirer-bank/register", handler.RegisterHandler).Methods("POST")
 
-	log.Fatal(http.ListenAndServeTLS(":8084", "ssl/selfsigned.cer", "ssl/selfsigned.key", router))
+	log.Fatal(http.ListenAndServeTLS(":8082", "ssl/selfsigned.cer", "ssl/selfsigned.key", router))
 }

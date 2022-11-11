@@ -69,15 +69,22 @@ func LogHttpRequest(request *http.Request, handlerName string, fields *map[strin
 	base.Info("HTTP request - ", handlerName)
 }
 
-func ExtractFieldsForLogging(bankResponse *dto.IssuerBankResponse) map[string]string {
+func ExtractPCCRequestFieldsForLogging(bankResponse *dto.IssuerBankRequest) map[string]string {
 	fields := make(map[string]string)
 	fields["MerchantOrderId"] = strconv.Itoa(bankResponse.MerchantOrderId)
 	fields["PaymentId"] = strconv.Itoa(bankResponse.PaymentId)
 	fields["AcquirerOrderId"] = strconv.Itoa(bankResponse.AcquirerOrderId)
 	fields["AcquirerTimestamp"] = bankResponse.AcquirerTimestamp
-	fields["IssuerOrderId"] = strconv.Itoa(bankResponse.IssuerOrderId)
-	fields["IssuerTimestamp"] = bankResponse.IssuerTimestamp
-	fields["TransactionState"] = bankResponse.TransactionState.String()
+
+	return fields
+}
+
+func ExtractResponseFieldsForLogging(bankResponse *dto.AcquirerBankFinalStep) map[string]string {
+	fields := make(map[string]string)
+	fields["MerchantOrderId"] = strconv.Itoa(bankResponse.MerchantOrderId)
+	fields["PaymentId"] = strconv.Itoa(bankResponse.PaymentId)
+	fields["AcquirerOrderId"] = strconv.Itoa(bankResponse.AcquirerOrderId)
+	fields["AcquirerTimestamp"] = bankResponse.AcquirerTimestamp
 
 	return fields
 }

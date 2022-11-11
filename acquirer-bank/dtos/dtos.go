@@ -24,6 +24,23 @@ func (s TransactionState) String() string {
 	return "unknown" // ITLEKYAG <3
 }
 
+type CreditCardInfo struct {
+	Pan             string `json:"pan" validate:"regexp=[0-9]{10}"`
+	SecurityCode    string `json:"securityCode" validate:"regexp=[0-9]{3}"`
+	CardHolderName  string `json:"cardHolderName"`
+	ExpiryDate      string `json:"expiryDate" validate:"regexp=[0-9]{2}/[0-9]{2}"`
+	MerchantOrderId int    `json:"merchantOrderId" validate:"min=1000000000,max=9999999999"`
+	PaymentId       int    `json:"paymentId" validate:"min=1000000000,max=9999999999"`
+}
+
+type AcquirerBankFinalStep struct {
+	MerchantOrderId   int              `json:"merchantOrderId"`
+	PaymentId         int              `json:"paymentId"`
+	AcquirerOrderId   int              `json:"acquirerOrderId"`
+	AcquirerTimestamp string           `json:"acquirerTimestamp"`
+	TransactionState  TransactionState `json:"transactionState"`
+}
+
 type IssuerBankRequest struct {
 	Pan               string  `json:"pan" validate:"regexp=[0-9]{10}"`
 	SecurityCode      string  `json:"securityCode" validate:"regexp=[0-9]{3}"`
