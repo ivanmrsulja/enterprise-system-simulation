@@ -17,6 +17,10 @@ import (
 func IssuerRequestHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	if !util.Authenticated(w, r) {
+		return
+	}
+
 	// Validate request
 	var bankRequest dto.IssuerBankRequest
 	json.NewDecoder(r.Body).Decode(&bankRequest)

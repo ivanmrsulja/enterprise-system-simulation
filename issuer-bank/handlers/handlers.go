@@ -6,20 +6,18 @@ import (
 	"net/http"
 	"time"
 
+	"gopkg.in/validator.v2"
+
 	dto "github.com/ivanmrsulja/enterprise-system-simulation/issuer-bank/dtos"
 	repository "github.com/ivanmrsulja/enterprise-system-simulation/issuer-bank/repository"
 	util "github.com/ivanmrsulja/enterprise-system-simulation/issuer-bank/util"
-	"gopkg.in/validator.v2"
 )
 
 func IssuerRequestHandler(w http.ResponseWriter, r *http.Request) {
 	var bankRequest dto.IssuerBankRequest
 	json.NewDecoder(r.Body).Decode(&bankRequest)
 
-	apiKey := r.Header.Get("X-Auth-Token")
-	if apiKey != util.ApiKey {
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: "Bad API key.", StatusCode: http.StatusUnauthorized})
+	if !util.Authenticated(w, r) {
 		return
 	}
 
