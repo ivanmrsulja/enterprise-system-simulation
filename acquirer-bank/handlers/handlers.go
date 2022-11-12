@@ -11,8 +11,9 @@ import (
 	"gopkg.in/validator.v2"
 
 	dto "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/dtos"
+	model "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/model"
 	repository "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/repository"
-	"github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/util"
+	util "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/util"
 )
 
 func CreditCardPaymentHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,16 +27,22 @@ func CreditCardPaymentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	amount := 100 // ovo mora da se dobavi odnekud, najvjerovatnije upit PSP-u koji to cuva
+	transactionDetails, err := repository.FindOrderTransaction(creditCardInfo.MerchantOrderId)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
+		return
+	}
+	amount := transactionDetails.Amount
 
 	if creditCardInfo.Pan[0:6] == "111111" {
-		handleTransactionInHouse(w, r, &creditCardInfo, float64(amount))
+		handleTransactionInHouse(w, r, &creditCardInfo, float64(amount), transactionDetails.MerchantId)
 	} else {
-		handleTransactionOverPCC(w, r, &creditCardInfo, float64(amount))
+		handleTransactionOverPCC(w, r, &creditCardInfo, float64(amount), transactionDetails.MerchantId)
 	}
 }
 
-func handleTransactionInHouse(w http.ResponseWriter, r *http.Request, creditCardInfo *dto.CreditCardInfo, amount float64) {
+func handleTransactionInHouse(w http.ResponseWriter, r *http.Request, creditCardInfo *dto.CreditCardInfo, amount float64, merchantId string) {
 	bankAccount, err := repository.FindBankAccount(creditCardInfo.Pan, creditCardInfo.SecurityCode, creditCardInfo.CardHolderName, creditCardInfo.ExpiryDate)
 
 	var state dto.TransactionState
@@ -64,9 +71,14 @@ func handleTransactionInHouse(w http.ResponseWriter, r *http.Request, creditCard
 	util.LogHttpRequest(r, "Credit Card Payment - Response", &fields)
 
 	json.NewEncoder(w).Encode(finalStep)
+
+	if state == dto.SUCCESS {
+		repository.UpdateMerchantAccountBalance(amount, merchantId)
+	}
+	repository.DeleteOrderTransaction(finalStep.MerchantOrderId)
 }
 
-func handleTransactionOverPCC(w http.ResponseWriter, r *http.Request, creditCardInfo *dto.CreditCardInfo, amount float64) {
+func handleTransactionOverPCC(w http.ResponseWriter, r *http.Request, creditCardInfo *dto.CreditCardInfo, amount float64, merchantId string) {
 
 	acquirerOrderId, acquirerTimestamp := generateIdAndTimestamp()
 
@@ -78,7 +90,8 @@ func handleTransactionOverPCC(w http.ResponseWriter, r *http.Request, creditCard
 		MerchantOrderId:   creditCardInfo.MerchantOrderId,
 		PaymentId:         creditCardInfo.PaymentId,
 		AcquirerOrderId:   acquirerOrderId,
-		AcquirerTimestamp: acquirerTimestamp}
+		AcquirerTimestamp: acquirerTimestamp,
+		Amount:            amount}
 
 	fields := util.ExtractPCCRequestFieldsForLogging(&bankRequest)
 	util.LogHttpRequest(r, "Credit Card Payment - PCC Request", &fields)
@@ -119,6 +132,11 @@ func handleTransactionOverPCC(w http.ResponseWriter, r *http.Request, creditCard
 	util.LogHttpRequest(r, "Credit Card Payment - PCC Response", &fields)
 
 	json.NewEncoder(w).Encode(finalStep)
+
+	if issuerBankResponse.TransactionState == dto.SUCCESS {
+		repository.UpdateMerchantAccountBalance(amount, merchantId)
+	}
+	repository.DeleteOrderTransaction(finalStep.MerchantOrderId)
 }
 
 func generateIdAndTimestamp() (int, string) {
@@ -129,6 +147,29 @@ func QrCodePaymentHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+func RedirectHandler(w http.ResponseWriter, r *http.Request) {
+	var paymentRequest dto.AcquirerBankPaymentRequest
+	json.NewDecoder(r.Body).Decode(&paymentRequest)
 
+	w.Header().Set("Content-Type", "application/json")
+	if errs := validator.Validate(paymentRequest); errs != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: errs.Error(), StatusCode: http.StatusBadRequest})
+		return
+	}
+
+	account, err := repository.AuthenticateMerchantAccount(paymentRequest.MerchantId, paymentRequest.MerchantPassword)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
+		return
+	}
+
+	transaction := model.Transaction{MerchantOrderId: paymentRequest.MerchantOrderId, MerchantId: account.MerchantId, Amount: paymentRequest.Amount}
+	repository.SaveTransaction(transaction)
+
+	paymentId, _ := generateIdAndTimestamp()
+
+	// TODO: Treba da se stavi pravi URL odje
+	json.NewEncoder(w).Encode(dto.BankRedirectResponse{PaymentUrl: "NEKI URL TREBA DA SE GENERISE", PaymentId: paymentId})
 }

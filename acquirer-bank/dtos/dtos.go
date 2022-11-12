@@ -33,6 +33,22 @@ type CreditCardInfo struct {
 	PaymentId       int    `json:"paymentId" validate:"min=1000000000,max=9999999999"`
 }
 
+type AcquirerBankPaymentRequest struct {
+	MerchantId        string  `json:"merchantId" validate:"regexp=[a-zA-Z0-9]{30}"`
+	MerchantPassword  string  `json:"merchantPassword" validate:"regexp=[a-zA-Z0-9]{100}"`
+	Amount            float64 `json:"amount" validate:"min=0"`
+	MerchantOrderId   int     `json:"merchantOrderId" validate:"min=1000000000,max=9999999999"`
+	MerchantTimestamp int     `json:"merchantTimestamp"`
+	SuccessUrl        string  `json:"successUrl"`
+	FailedUrl         string  `json:"failedUrl"`
+	ErrorUrl          string  `json:"errorUrl"`
+}
+
+type BankRedirectResponse struct {
+	PaymentUrl string `json:"paymentUrl"`
+	PaymentId  int    `json:"paymentId"`
+}
+
 type AcquirerBankFinalStep struct {
 	MerchantOrderId   int              `json:"merchantOrderId"`
 	PaymentId         int              `json:"paymentId"`
