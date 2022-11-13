@@ -39,25 +39,25 @@ func AuthenticateMerchantAccount(merchantId string, merchantPassword string) (mo
 	return account, nil
 }
 
-func FindOrderTransaction(merchantOrderId int) (model.Transaction, error) {
+func FindOrderTransaction(paymentId int) (model.Transaction, error) {
 	var transaction model.Transaction
 
-	util.Db.Where(&model.Transaction{MerchantOrderId: merchantOrderId}).First(&transaction)
+	util.Db.Where(&model.Transaction{PaymentId: paymentId}).First(&transaction)
 
 	if transaction.ID == 0 {
-		return transaction, errors.New("transaction with given merchant order ID does not exist")
+		return transaction, errors.New("transaction with given payment ID does not exist")
 	}
 
 	return transaction, nil
 }
 
-func DeleteOrderTransaction(merchantOrderId int) error {
+func DeleteOrderTransaction(paymentId int) error {
 	var transactionToDelete model.Transaction
 
-	util.Db.Where(&model.Transaction{MerchantOrderId: merchantOrderId}).First(&transactionToDelete)
+	util.Db.Where(&model.Transaction{PaymentId: paymentId}).First(&transactionToDelete)
 
 	if transactionToDelete.ID == 0 {
-		return errors.New("transaction with given merchant order ID does not exist")
+		return errors.New("transaction with given payment ID does not exist")
 	}
 
 	util.Db.Delete(transactionToDelete)

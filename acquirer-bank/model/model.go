@@ -24,7 +24,7 @@ type MerchantAccount struct {
 
 type Transaction struct {
 	gorm.Model
-	MerchantOrderId int `sql:"type:bigint"`
-	MerchantId      string
-	Amount          float64
+	PaymentId  int `sql:"type:bigint"`
+	MerchantId string
+	Amount     float64
 }

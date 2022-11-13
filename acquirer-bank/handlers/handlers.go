@@ -27,7 +27,7 @@ func CreditCardPaymentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transactionDetails, err := repository.FindOrderTransaction(creditCardInfo.MerchantOrderId)
+	transactionDetails, err := repository.FindOrderTransaction(creditCardInfo.PaymentId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
@@ -75,7 +75,7 @@ func handleTransactionInHouse(w http.ResponseWriter, r *http.Request, creditCard
 	if state == dto.SUCCESS {
 		repository.UpdateMerchantAccountBalance(amount, merchantId)
 	}
-	repository.DeleteOrderTransaction(finalStep.MerchantOrderId)
+	repository.DeleteOrderTransaction(finalStep.PaymentId)
 }
 
 func handleTransactionOverPCC(w http.ResponseWriter, r *http.Request, creditCardInfo *dto.CreditCardInfo, amount float64, merchantId string) {
@@ -136,7 +136,7 @@ func handleTransactionOverPCC(w http.ResponseWriter, r *http.Request, creditCard
 	if issuerBankResponse.TransactionState == dto.SUCCESS {
 		repository.UpdateMerchantAccountBalance(amount, merchantId)
 	}
-	repository.DeleteOrderTransaction(finalStep.MerchantOrderId)
+	repository.DeleteOrderTransaction(finalStep.PaymentId)
 }
 
 func generateIdAndTimestamp() (int, string) {
@@ -160,16 +160,37 @@ func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 
 	account, err := repository.AuthenticateMerchantAccount(paymentRequest.MerchantId, paymentRequest.MerchantPassword)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: err.Error(), StatusCode: http.StatusUnauthorized})
 		return
 	}
 
-	transaction := model.Transaction{MerchantOrderId: paymentRequest.MerchantOrderId, MerchantId: account.MerchantId, Amount: paymentRequest.Amount}
-	repository.SaveTransaction(transaction)
-
 	paymentId, _ := generateIdAndTimestamp()
+
+	transaction := model.Transaction{PaymentId: paymentId, MerchantId: account.MerchantId, Amount: paymentRequest.Amount}
+	repository.SaveTransaction(transaction)
 
 	// TODO: Treba da se stavi pravi URL odje
 	json.NewEncoder(w).Encode(dto.BankRedirectResponse{PaymentUrl: "NEKI URL TREBA DA SE GENERISE", PaymentId: paymentId})
+}
+
+func AuthenticateMerchant(w http.ResponseWriter, r *http.Request) {
+	var authenticationRequest dto.AcquirerBankMerchantAuthentication
+	json.NewDecoder(r.Body).Decode(&authenticationRequest)
+
+	w.Header().Set("Content-Type", "application/json")
+	if errs := validator.Validate(authenticationRequest); errs != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: errs.Error(), StatusCode: http.StatusBadRequest})
+		return
+	}
+
+	_, err := repository.AuthenticateMerchantAccount(authenticationRequest.MerchantId, authenticationRequest.MerchantPassword)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(false)
+		return
+	}
+
+	json.NewEncoder(w).Encode(true)
 }

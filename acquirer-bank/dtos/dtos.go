@@ -83,3 +83,8 @@ type ErrorResponse struct {
 	Message    string `json:"message"`
 	StatusCode int    `json:"statusCode"`
 }
+
+type AcquirerBankMerchantAuthentication struct {
+	MerchantId       string `json:"merchantId" validate:"regexp=[a-zA-Z0-9]{30}"`
+	MerchantPassword string `json:"merchantPassword" validate:"regexp=[a-zA-Z0-9]{100}"`
+}
