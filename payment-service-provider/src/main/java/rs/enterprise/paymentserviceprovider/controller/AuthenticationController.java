@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rs.enterprise.paymentserviceprovider.annotation.Log;
 import rs.enterprise.paymentserviceprovider.dto.AuthenticationRequestDTO;
 import rs.enterprise.paymentserviceprovider.dto.AuthenticationResponseDTO;
 import rs.enterprise.paymentserviceprovider.dto.RegisterDTO;
@@ -36,6 +37,7 @@ public class AuthenticationController {
         this.merchantService = merchantService;
     }
 
+    @Log(message = "Authentication attempt.")
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody AuthenticationRequestDTO authenticationRequestDTO, HttpServletResponse response) throws AccountLockedException {
         var authentication = authenticationManager.authenticate(
@@ -47,6 +49,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(new AuthenticationResponseDTO(token), HttpStatus.OK);
     }
 
+    @Log(message = "Registration attempt.")
     @PostMapping("/register")
     public RegistrationResponseDTO register(HttpServletRequest request, @RequestBody RegisterDTO registrationRequest) {
         var newUser = merchantService.register(registrationRequest);
