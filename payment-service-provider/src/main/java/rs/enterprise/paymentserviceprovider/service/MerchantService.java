@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.enterprise.paymentserviceprovider.dto.RegisterDTO;
+import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.Merchant;
 import rs.enterprise.paymentserviceprovider.repository.AuthorityRepository;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
@@ -35,7 +36,7 @@ public class MerchantService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return merchantRepository.findByMerchantId(username).orElseThrow(() -> new RuntimeException(String.format("Merchant with ID: %s not found.", username)));
+        return merchantRepository.findByMerchantId(username).orElseThrow(() -> new NotFoundException(String.format("Merchant with ID: %s not found.", username)));
     }
 
     public Merchant register(RegisterDTO registrationRequest) {
@@ -51,8 +52,12 @@ public class MerchantService implements UserDetailsService {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
 
-        var authority = authorityRepository.findByName("ROLE_MERCHANT").orElseThrow(() -> new RuntimeException("Authority with given name does not exist."));
+        var authority = authorityRepository.findByName("ROLE_MERCHANT").orElseThrow(() -> new NotFoundException("Authority with given name does not exist."));
         var user = new Merchant(registrationRequest.getMerchantId(), passwordEncoder.encode(registrationRequest.getMerchantPassword()), generatedString, registrationRequest.getName(), authority);
         return merchantRepository.save(user);
+    }
+
+    public Merchant findById(Integer id) {
+        return merchantRepository.findById(id).orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
     }
 }

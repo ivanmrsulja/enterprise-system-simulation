@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,10 +22,11 @@ public class Merchant implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @Embedded
-//    private Set<String> paymentMethods = new HashSet<>();
+    @ElementCollection
+    @JoinTable(name = "merchant_payment_methods", joinColumns = @JoinColumn(name = "merchant_id"))
+    private Set<String> paymentMethods = new HashSet<>();
 
-    @Column(name = "merchant_id")
+    @Column(name = "merchant_id", unique = true)
     private String merchantId;
 
     @Column(name = "merchant_password")

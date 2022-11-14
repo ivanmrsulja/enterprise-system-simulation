@@ -16,6 +16,7 @@ var (
 	}
 	merchantAccounts = []model.MerchantAccount{
 		{MerchantId: "j4komDDBwXVWoHg4ej6WMVqdD6U9qE", MerchantPassword: Bytes2StrRaw(Hash("j0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg"))},
+		{MerchantId: "k4komDDBwXVWoHg4ej6WMVqdD6U9qE", MerchantPassword: Bytes2StrRaw(Hash("k0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg"))},
 	}
 )
 

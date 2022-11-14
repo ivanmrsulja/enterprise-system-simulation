@@ -17,6 +17,11 @@ import (
 )
 
 func CreditCardPaymentHandler(w http.ResponseWriter, r *http.Request) {
+
+	if !util.Authenticated(w, r) {
+		return
+	}
+
 	var creditCardInfo dto.CreditCardInfo
 	json.NewDecoder(r.Body).Decode(&creditCardInfo)
 
@@ -148,6 +153,11 @@ func QrCodePaymentHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RedirectHandler(w http.ResponseWriter, r *http.Request) {
+
+	if !util.Authenticated(w, r) {
+		return
+	}
+
 	var paymentRequest dto.AcquirerBankPaymentRequest
 	json.NewDecoder(r.Body).Decode(&paymentRequest)
 
@@ -175,6 +185,11 @@ func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthenticateMerchant(w http.ResponseWriter, r *http.Request) {
+
+	if !util.Authenticated(w, r) {
+		return
+	}
+
 	var authenticationRequest dto.AcquirerBankMerchantAuthentication
 	json.NewDecoder(r.Body).Decode(&authenticationRequest)
 

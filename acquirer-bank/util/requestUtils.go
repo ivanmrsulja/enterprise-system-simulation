@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 	"os"
 
 	roundrobin "github.com/hlts2/round-robin"
+	dto "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/dtos"
 )
 
 var ApiKey string
@@ -37,4 +39,14 @@ func DelegateResponse(response *http.Response, w http.ResponseWriter) {
 	w.WriteHeader(response.StatusCode)
 	io.Copy(w, response.Body)
 	response.Body.Close()
+}
+
+func Authenticated(w http.ResponseWriter, r *http.Request) bool {
+	apiKey := r.Header.Get("X-Auth-Token")
+	if apiKey != ApiKey {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: "Bad API key.", StatusCode: http.StatusUnauthorized})
+		return false
+	}
+	return true
 }
