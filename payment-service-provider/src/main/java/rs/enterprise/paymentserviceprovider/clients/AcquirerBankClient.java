@@ -16,5 +16,5 @@ public interface AcquirerBankClient {
     boolean authenticateMerchant(@RequestHeader("X-Auth-Token") String apiKey, @RequestBody AcquirerBankMerchantAuthenticationDTO authRequest);
 
     @PostMapping(value = "/request-redirect")
-    BankRedirectResponseDTO requestRedirect(@RequestHeader("X-API-Key") String apiKey, @RequestBody AcquirerBankPaymentRequestDTO paymentRequest);
+    BankRedirectResponseDTO requestRedirect(@RequestHeader("X-Auth-Token") String apiKey, @RequestBody AcquirerBankPaymentRequestDTO paymentRequest);
 }
