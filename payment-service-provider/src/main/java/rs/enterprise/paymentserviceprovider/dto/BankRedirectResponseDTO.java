@@ -13,5 +13,5 @@ public class BankRedirectResponseDTO {
 
     private String paymentUrl;
 
-    private Integer paymentId;
+    private Long paymentId;
 }

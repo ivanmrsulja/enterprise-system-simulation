@@ -17,9 +17,9 @@ public class AcquirerBankPaymentRequestDTO {
 
     private Double Amount;
 
-    private Integer MerchantOrderId;
+    private Long MerchantOrderId;
 
-    private Integer MerchantTimestamp;
+    private String MerchantTimestamp;
 
     private String SuccessUrl;
 

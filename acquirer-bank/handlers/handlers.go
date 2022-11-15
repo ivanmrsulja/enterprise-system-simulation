@@ -17,11 +17,6 @@ import (
 )
 
 func CreditCardPaymentHandler(w http.ResponseWriter, r *http.Request) {
-
-	if !util.Authenticated(w, r) {
-		return
-	}
-
 	var creditCardInfo dto.CreditCardInfo
 	json.NewDecoder(r.Body).Decode(&creditCardInfo)
 
