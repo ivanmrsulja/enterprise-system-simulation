@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //api
                 .antMatchers(HttpMethod.POST, "/api/users/authenticate").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll(); // OVO SAMO PRIVREMENO NEMOJ DA SE OBRUKAMO
 
         //TODO: ovo vidi
         http.headers().xssProtection().and().contentSecurityPolicy("script-src 'self'");

@@ -22,7 +22,7 @@ public class Merchant implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @JoinTable(name = "merchant_payment_methods", joinColumns = @JoinColumn(name = "merchant_id"))
     private Set<String> paymentMethods = new HashSet<>();
 

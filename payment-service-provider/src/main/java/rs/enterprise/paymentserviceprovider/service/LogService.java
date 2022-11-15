@@ -8,7 +8,6 @@ import rs.enterprise.paymentserviceprovider.model.enums.LogType;
 import rs.enterprise.paymentserviceprovider.model.valueobjects.Log;
 import rs.enterprise.paymentserviceprovider.repository.mongo.LogRepository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
