@@ -149,6 +149,8 @@ func QrCodePaymentHandler(w http.ResponseWriter, r *http.Request) {
 
 func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 
+	w.Header().Set("Content-Type", "application/json")
+
 	if !util.Authenticated(w, r) {
 		return
 	}
@@ -156,7 +158,6 @@ func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 	var paymentRequest dto.AcquirerBankPaymentRequest
 	json.NewDecoder(r.Body).Decode(&paymentRequest)
 
-	w.Header().Set("Content-Type", "application/json")
 	if errs := validator.Validate(paymentRequest); errs != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(dto.ErrorResponse{Message: errs.Error(), StatusCode: http.StatusBadRequest})
