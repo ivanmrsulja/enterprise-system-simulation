@@ -15,6 +15,7 @@ import rs.enterprise.paymentserviceprovider.annotation.Log;
 import rs.enterprise.paymentserviceprovider.clients.AcquirerBankClient;
 import rs.enterprise.paymentserviceprovider.dto.*;
 import rs.enterprise.paymentserviceprovider.service.MerchantService;
+import rs.enterprise.paymentserviceprovider.service.TwoFactorAuthenticationService;
 import rs.enterprise.paymentserviceprovider.util.jwt.JwtUtil;
 
 import javax.security.auth.login.AccountLockedException;
@@ -30,6 +31,8 @@ public class AuthenticationController {
     private final MerchantService merchantService;
     private final AcquirerBankClient acquirerBankClient;
 
+    private final TwoFactorAuthenticationService twoFactorAuthenticationService;
+
     @Value("${API_KEY}")
     private String apiKey;
 
@@ -37,22 +40,32 @@ public class AuthenticationController {
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     JwtUtil tokenUtil,
                                     MerchantService merchantService,
-                                    AcquirerBankClient acquirerBankClient) {
+                                    AcquirerBankClient acquirerBankClient,
+                                    TwoFactorAuthenticationService twoFactorAuthenticationService) {
         this.authenticationManager = authenticationManager;
         this.tokenUtil = tokenUtil;
         this.merchantService = merchantService;
         this.acquirerBankClient = acquirerBankClient;
+        this.twoFactorAuthenticationService = twoFactorAuthenticationService;
     }
 
     @Log(message = "Authentication attempt.")
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody AuthenticationRequestDTO authenticationRequestDTO, HttpServletResponse response) throws AccountLockedException {
+    @PostMapping("/authenticate/first-step")
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws AccountLockedException {
         var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getMerchantId(), authenticationRequestDTO.getMerchantPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwtSecurity = tokenUtil.generateJWTSecurity();
         String token = tokenUtil.generateToken(authentication, jwtSecurity);
+        twoFactorAuthenticationService.createNewAuthToken(authenticationRequestDTO.getMerchantId(), token);
+        return new ResponseEntity<>(new AuthenticationResponseDTO("PATIENCE_MY_YOUNG_PADAWAN"), HttpStatus.OK);
+    }
+
+    @Log(message = "Authentication attempt 2FA.")
+    @PostMapping("/authenticate/second-step")
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody TwoFactorAuthenticationRequestDTO authRequest) {
+        var token = twoFactorAuthenticationService.verifyToken(authRequest.getMerchantId(), authRequest.getPinCode());
         return new ResponseEntity<>(new AuthenticationResponseDTO(token), HttpStatus.OK);
     }
 
