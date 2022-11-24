@@ -16,6 +16,17 @@ func CreateDataCoded(dataToCodeStr string, dataToCode DataToCode, encode []byte)
 	}
 }
 
+func CreateDataValidation(dataToCodeStr string, dataToCode DataToCode) DataValidation {
+	return DataValidation{
+		S: CodeDesc{
+			Code: 0,
+			Desc: "OK",
+		},
+		T: dataToCodeStr,
+		N: dataToCode,
+	}
+}
+
 func CreateErrorResponse(dataToCodeStr string, code uint32, desc string, errors []string) ErrorResponse {
 	return ErrorResponse{
 		S: CodeDesc{

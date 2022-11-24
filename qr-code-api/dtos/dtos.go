@@ -17,6 +17,12 @@ type DataCoded struct {
 	I []byte     `json:"i"`
 }
 
+type DataValidation struct {
+	S CodeDesc   `json:"s"`
+	T string     `json:"t"`
+	N DataToCode `json:"n"`
+}
+
 type ErrorResponse struct {
 	S CodeDesc `json:"s"`
 	T string   `json:"t"`
