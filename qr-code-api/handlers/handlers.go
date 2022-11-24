@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/skip2/go-qrcode"
 	"gopkg.in/validator.v2"
 	"net/http"
 	"qr-code-api/dtos"
@@ -28,7 +29,14 @@ func GenQrCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ret := dtos.CreateDataValidation(dataToCodeStr, dataToCode)
+	encoded, err := qrcode.Encode(dataToCodeStr, qrcode.Medium, 150)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(dtos.CreateErrorResponse(dataToCodeStr, 500, "Unknown error occurred while generating qr code", []string{"Unknown error occurred while generating qr code"}))
+		return
+	}
+
+	ret := dtos.CreateDataCoded(dataToCodeStr, dataToCode, encoded)
 	json.NewEncoder(w).Encode(ret)
 }
 
@@ -51,4 +59,7 @@ func ValidateData(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(dtos.CreateErrorResponse(dataToCodeStr, 620, errorsStr, errorsArr))
 		return
 	}
+
+	ret := dtos.CreateDataValidation(dataToCodeStr, dataToCode)
+	json.NewEncoder(w).Encode(ret)
 }

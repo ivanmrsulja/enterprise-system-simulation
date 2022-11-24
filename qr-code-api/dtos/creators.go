@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func CreateDataCoded(dataToCodeStr string, dataToCode DataToCode, encode []byte) DataCoded {
+func CreateDataCoded(dataToCodeStr string, dataToCode DataToCode, encoded []byte) DataCoded {
 	return DataCoded{
 		S: CodeDesc{
 			Code: 0,
@@ -12,7 +12,7 @@ func CreateDataCoded(dataToCodeStr string, dataToCode DataToCode, encode []byte)
 		},
 		T: dataToCodeStr,
 		N: dataToCode,
-		I: encode,
+		I: encoded,
 	}
 }
 
@@ -36,20 +36,6 @@ func CreateErrorResponse(dataToCodeStr string, code uint32, desc string, errors 
 		T: dataToCodeStr,
 		E: errors,
 	}
-}
-
-func CreateStringOfArray(array *[]string) string {
-	ret := ""
-
-	for _, element := range *array {
-		ret += element + "|"
-	}
-
-	if len(ret) > 0 {
-		ret = strings.Trim(ret, "|")
-	}
-
-	return ret
 }
 
 func ReplaceGenericMessage(original string) string {
