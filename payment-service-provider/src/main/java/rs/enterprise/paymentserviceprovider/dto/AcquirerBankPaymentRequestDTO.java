@@ -11,19 +11,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AcquirerBankPaymentRequestDTO {
 
-    private String MerchantId;
+    private String merchantId;
 
-    private String MerchantPassword;
+    private String merchantPassword;
 
-    private Double Amount;
+    private Double amount;
 
-    private Long MerchantOrderId;
+    private Long merchantOrderId;
 
-    private String MerchantTimestamp;
+    private String merchantTimestamp;
 
-    private String SuccessUrl;
+    private String successUrl;
 
-    private String FailedUrl;
+    private String failedUrl;
 
-    private String ErrorUrl;
+    private String errorUrl;
 }
