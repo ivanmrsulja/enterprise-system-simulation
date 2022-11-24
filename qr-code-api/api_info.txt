@@ -1,0 +1,9 @@
+POST /api/qr-code-generate
+    - should send json file with given fields and appropriate patterns given with regex:
+        K  - regex:
+        V  - regex:
+        C  - regex:
+        R  - regex:
+        N  - regex:
+        I  - regex:
+        SF - regex:
