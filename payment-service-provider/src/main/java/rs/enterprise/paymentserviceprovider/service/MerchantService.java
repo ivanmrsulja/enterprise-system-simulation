@@ -11,6 +11,7 @@ import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.Merchant;
 import rs.enterprise.paymentserviceprovider.repository.AuthorityRepository;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
+import rs.enterprise.paymentserviceprovider.util.SecureStringGenerator;
 
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
@@ -20,18 +21,19 @@ import java.security.SecureRandom;
 public class MerchantService implements UserDetailsService {
 
     private final MerchantRepository merchantRepository;
-
     private final AuthorityRepository authorityRepository;
-
     private final PasswordEncoder passwordEncoder;
+    private final SecureStringGenerator secureStringGenerator;
 
     @Autowired
     public MerchantService(MerchantRepository merchantRepository,
                            AuthorityRepository authorityRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           SecureStringGenerator secureStringGenerator) {
         this.merchantRepository = merchantRepository;
         this.authorityRepository = authorityRepository;
         this.passwordEncoder = passwordEncoder;
+        this.secureStringGenerator = secureStringGenerator;
     }
 
     @Override
@@ -40,20 +42,10 @@ public class MerchantService implements UserDetailsService {
     }
 
     public Merchant register(RegisterDTO registrationRequest) {
-
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 128;
-        SecureRandom random = new SecureRandom();
-
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+        var apiKey = secureStringGenerator.generate(128);
 
         var authority = authorityRepository.findByName("ROLE_MERCHANT").orElseThrow(() -> new NotFoundException("Authority with given name does not exist."));
-        var user = new Merchant(registrationRequest.getMerchantId(), passwordEncoder.encode(registrationRequest.getMerchantPassword()), generatedString, registrationRequest.getName(), authority);
+        var user = new Merchant(registrationRequest.getMerchantId(), passwordEncoder.encode(registrationRequest.getMerchantPassword()), apiKey, registrationRequest.getName(), registrationRequest.getEmail(), authority);
         return merchantRepository.save(user);
     }
 

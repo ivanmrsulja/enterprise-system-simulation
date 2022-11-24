@@ -20,6 +20,7 @@ type MerchantAccount struct {
 	MerchantId       string
 	MerchantPassword string
 	Balance          float64
+	MerchantName     string
 }
 
 type Transaction struct {

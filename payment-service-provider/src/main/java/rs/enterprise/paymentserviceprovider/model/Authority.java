@@ -12,11 +12,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "authorities")
-public class Authority implements GrantedAuthority {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Authority extends BaseEntity implements GrantedAuthority {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

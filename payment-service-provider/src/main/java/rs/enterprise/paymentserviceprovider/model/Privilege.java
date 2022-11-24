@@ -12,11 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "privileges")
 @NoArgsConstructor
-public class Privilege implements GrantedAuthority {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Privilege extends BaseEntity implements GrantedAuthority {
 
     @Column(name = "name")
     private String name;

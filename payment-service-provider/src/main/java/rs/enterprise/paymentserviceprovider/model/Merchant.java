@@ -14,13 +14,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "merchants")
 @NoArgsConstructor
-public class Merchant implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Table(name = "merchants")
+public class Merchant extends BaseEntity implements UserDetails {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @JoinTable(name = "merchant_payment_methods", joinColumns = @JoinColumn(name = "merchant_id"))
@@ -38,15 +34,19 @@ public class Merchant implements UserDetails {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "email", unique = true)
+    private String email;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "authority_id")
     private Authority authority;
 
-    public Merchant(String merchantId, String merchantPassword, String apiKey, String name, Authority authority) {
+    public Merchant(String merchantId, String merchantPassword, String apiKey, String name, String email, Authority authority) {
         this.merchantId = merchantId;
         this.merchantPassword = merchantPassword;
         this.apiKey = apiKey;
         this.name = name;
+        this.email = email;
         this.authority = authority;
     }
 

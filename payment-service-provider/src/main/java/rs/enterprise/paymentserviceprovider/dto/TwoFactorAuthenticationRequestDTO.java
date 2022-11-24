@@ -7,16 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterDTO {
+@AllArgsConstructor
+public class TwoFactorAuthenticationRequestDTO {
 
     private String merchantId;
 
-    private String merchantPassword;
-
-    private String name;
-
-    private String email;
-
+    private String pinCode;
 }

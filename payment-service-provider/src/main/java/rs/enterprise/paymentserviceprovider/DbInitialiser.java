@@ -40,7 +40,7 @@ public class DbInitialiser implements ApplicationRunner {
 
         var user1 = new Merchant("j4komDDBwXVWoHg4ej6WMVqdD6U9qE",
                             passwordEncoder.encode("j0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg"),
-                            "asdasd", "Ime", authority1);
+                            "asdasd", "Ime", "mrsuljaivancic@gmail.com", authority1);
         user1.setPaymentMethods(new HashSet<>(List.of(new String[]{"Credit Card", "PayPal", "Bitcoin"})));
         merchantRepository.save(user1);
     }
