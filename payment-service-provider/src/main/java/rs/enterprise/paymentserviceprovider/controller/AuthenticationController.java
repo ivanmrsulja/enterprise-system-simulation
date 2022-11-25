@@ -18,9 +18,7 @@ import rs.enterprise.paymentserviceprovider.service.MerchantService;
 import rs.enterprise.paymentserviceprovider.service.TwoFactorAuthenticationService;
 import rs.enterprise.paymentserviceprovider.util.jwt.JwtUtil;
 
-import javax.security.auth.login.AccountLockedException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -51,7 +49,7 @@ public class AuthenticationController {
 
     @Log(message = "Authentication attempt.")
     @PostMapping("/authenticate/first-step")
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws AccountLockedException {
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
         var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getMerchantId(), authenticationRequestDTO.getMerchantPassword())
         );
@@ -64,7 +62,7 @@ public class AuthenticationController {
 
     @Log(message = "Authentication attempt 2FA.")
     @PostMapping("/authenticate/second-step")
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody TwoFactorAuthenticationRequestDTO authRequest) {
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody TwoFactorAuthenticationRequestDTO authRequest) throws Exception {
         var token = twoFactorAuthenticationService.verifyToken(authRequest.getMerchantId(), authRequest.getPinCode());
         return new ResponseEntity<>(new AuthenticationResponseDTO(token), HttpStatus.OK);
     }

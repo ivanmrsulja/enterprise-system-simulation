@@ -14,7 +14,6 @@ import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.util.SecureStringGenerator;
 
 import javax.transaction.Transactional;
-import java.security.SecureRandom;
 
 @Service
 @Transactional

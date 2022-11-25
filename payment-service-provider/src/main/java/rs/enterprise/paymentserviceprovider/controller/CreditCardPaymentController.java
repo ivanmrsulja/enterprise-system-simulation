@@ -27,7 +27,7 @@ public class CreditCardPaymentController {
     }
 
     @GetMapping("/request-redirect-to-bank/{merchantOrderId}/{bankPaymentId}/{method}")
-    public BankRedirectResponseDTO requestRedirectToBank(@PathVariable Long merchantOrderId, @PathVariable Integer bankPaymentId, @PathVariable String method) {
+    public BankRedirectResponseDTO requestRedirectToBank(@PathVariable Long merchantOrderId, @PathVariable Integer bankPaymentId, @PathVariable String method) throws Exception {
         var paymentRequest = bankPaymentService.fetchBankPaymentRequest(merchantOrderId, bankPaymentId);
         var bankResponse =  acquirerBankClient.requestRedirect(apiKey, paymentRequest);
         bankResponse.setPaymentUrl(bankResponse.getPaymentUrl() + "/" + merchantOrderId + "/" + bankResponse.getPaymentId() + "/" + method);
@@ -35,7 +35,7 @@ public class CreditCardPaymentController {
     }
 
     @PostMapping("/request-redirect") // ovo privremeno dok se ne cujemo kako izgleda API za PayPal i BTC pa da napravimo nesto genericko :)
-    public PSPRedirectResponseDTO requestRedirect(@RequestBody AcquirerBankPaymentRequestDTO paymentRequest) {
+    public PSPRedirectResponseDTO requestRedirect(@RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
         return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
     }
 }

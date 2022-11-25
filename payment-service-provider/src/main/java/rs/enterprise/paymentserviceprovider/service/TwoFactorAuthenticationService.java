@@ -5,10 +5,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.TwoFactorAuthenticationToken;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.repository.TwoFactorAuthenticationTokenRepository;
+import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
 import rs.enterprise.paymentserviceprovider.util.SecureStringGenerator;
 
 @Service
@@ -19,30 +21,33 @@ public class TwoFactorAuthenticationService {
     private final MerchantRepository merchantRepository;
 
     private final SecureStringGenerator secureStringGenerator;
+    private final EncryptionUtil encryptionUtil;
 
     @Autowired
     public TwoFactorAuthenticationService(JavaMailSender emailSender,
                                           TwoFactorAuthenticationTokenRepository twoFactorAuthenticationTokenRepository,
                                           MerchantRepository merchantRepository,
-                                          SecureStringGenerator secureStringGenerator) {
+                                          SecureStringGenerator secureStringGenerator,
+                                          EncryptionUtil encryptionUtil) {
         this.emailSender = emailSender;
         this.twoFactorAuthenticationTokenRepository = twoFactorAuthenticationTokenRepository;
         this.merchantRepository = merchantRepository;
         this.secureStringGenerator = secureStringGenerator;
+        this.encryptionUtil = encryptionUtil;
     }
 
-    public void createNewAuthToken(String merchantId, String token) {
+    public void createNewAuthToken(String merchantId, String token) throws Exception {
         var merchant = merchantRepository.findByMerchantId(merchantId).orElseThrow(() -> new NotFoundException("There is no merchant present with ID: " + merchantId));
         var pin = secureStringGenerator.generate(5);
-        var twoFAToken = new TwoFactorAuthenticationToken(merchantId, pin, token);
+        var twoFAToken = new TwoFactorAuthenticationToken(merchantId, pin, Base64Utils.encodeToString(encryptionUtil.encrypt(token)));
         twoFactorAuthenticationTokenRepository.save(twoFAToken);
         sendPinViaEmail(merchant.getEmail(), pin);
     }
 
-    public String verifyToken(String merchantId, String pinCode) {
+    public String verifyToken(String merchantId, String pinCode) throws Exception {
         var twoFAToken = twoFactorAuthenticationTokenRepository.verifyToken(merchantId, pinCode)
                 .orElseThrow(() -> new NotFoundException("No 2FA token present for merchant with ID: " + merchantId));
-        var token = twoFAToken.getToken();
+        var token = encryptionUtil.decrypt(Base64Utils.decodeFromString(twoFAToken.getToken()));
         twoFactorAuthenticationTokenRepository.delete(twoFAToken);
         return token;
     }
