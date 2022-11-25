@@ -2,7 +2,6 @@ package rs.enterprise.paymentserviceprovider.config;
 
 import feign.FeignException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
