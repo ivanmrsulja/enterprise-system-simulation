@@ -5,7 +5,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.TwoFactorAuthenticationToken;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
@@ -39,7 +38,7 @@ public class TwoFactorAuthenticationService {
     public void createNewAuthToken(String merchantId, String token) throws Exception {
         var merchant = merchantRepository.findByMerchantId(merchantId).orElseThrow(() -> new NotFoundException("There is no merchant present with ID: " + merchantId));
         var pin = secureStringGenerator.generate(5);
-        var twoFAToken = new TwoFactorAuthenticationToken(merchantId, pin, Base64Utils.encodeToString(encryptionUtil.encrypt(token)));
+        var twoFAToken = new TwoFactorAuthenticationToken(merchantId, pin, encryptionUtil.encrypt(token));
         twoFactorAuthenticationTokenRepository.save(twoFAToken);
         sendPinViaEmail(merchant.getEmail(), pin);
     }
@@ -47,7 +46,7 @@ public class TwoFactorAuthenticationService {
     public String verifyToken(String merchantId, String pinCode) throws Exception {
         var twoFAToken = twoFactorAuthenticationTokenRepository.verifyToken(merchantId, pinCode)
                 .orElseThrow(() -> new NotFoundException("No 2FA token present for merchant with ID: " + merchantId));
-        var token = encryptionUtil.decrypt(Base64Utils.decodeFromString(twoFAToken.getToken()));
+        var token = encryptionUtil.decrypt(twoFAToken.getToken());
         twoFactorAuthenticationTokenRepository.delete(twoFAToken);
         return token;
     }

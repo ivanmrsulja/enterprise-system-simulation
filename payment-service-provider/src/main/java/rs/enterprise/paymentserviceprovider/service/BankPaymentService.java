@@ -2,7 +2,6 @@ package rs.enterprise.paymentserviceprovider.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 import rs.enterprise.paymentserviceprovider.dto.AcquirerBankPaymentRequestDTO;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.BankPayment;
@@ -27,7 +26,7 @@ public class BankPaymentService {
         var savedPayment = bankPaymentRepository.save(
                 new BankPayment(
                         paymentRequest.getMerchantId(),
-                        Base64Utils.encodeToString(encryptionUtil.encrypt(paymentRequest.getMerchantPassword())),
+                        encryptionUtil.encrypt(paymentRequest.getMerchantPassword()),
                         paymentRequest.getMerchantOrderId(),
                         paymentRequest.getMerchantTimestamp(),
                         paymentRequest.getAmount(),
@@ -35,13 +34,13 @@ public class BankPaymentService {
                         paymentRequest.getFailedUrl(),
                         paymentRequest.getErrorUrl()));
 
-        return "URL BASE/" + savedPayment.getMerchantOrderId() + "/" + savedPayment.getId();
+        return "URL BASE/" + savedPayment.getMerchantOrderId() + "/" + savedPayment.getId() + "/" + savedPayment.getMerchantId();
     }
 
     public AcquirerBankPaymentRequestDTO fetchBankPaymentRequest(Long merchantOrderId, Integer bankPaymentId) throws Exception {
         var bankPayment = bankPaymentRepository.getByIdAndMerchantOrderId(bankPaymentId, merchantOrderId).orElseThrow(() -> new NotFoundException("No such bank payment with given credentials."));
         return new AcquirerBankPaymentRequestDTO(bankPayment.getMerchantId(),
-                encryptionUtil.decrypt(Base64Utils.decodeFromString(bankPayment.getMerchantPassword())),
+                encryptionUtil.decrypt(bankPayment.getMerchantPassword()),
                 bankPayment.getAmount(),
                 bankPayment.getMerchantOrderId(),
                 bankPayment.getMerchantTimestamp(),

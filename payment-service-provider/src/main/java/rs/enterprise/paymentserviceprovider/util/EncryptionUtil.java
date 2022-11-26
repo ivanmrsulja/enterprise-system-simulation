@@ -2,6 +2,7 @@ package rs.enterprise.paymentserviceprovider.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -22,14 +23,13 @@ public class EncryptionUtil {
         this.secretKey = secretKey;
     }
 
-    public byte[] encrypt(String plainText) throws Exception {
+    public String encrypt(String plainText) throws Exception {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, IV_PARAMETER_SPEC);
-        return cipher.doFinal(plainText.getBytes());
+        return Base64Utils.encodeToString(cipher.doFinal(plainText.getBytes()));
     }
 
-    public String decrypt(byte[] cipherText) throws Exception {
+    public String decrypt(String cipherText) throws Exception {
         cipher.init(Cipher.DECRYPT_MODE, secretKey, IV_PARAMETER_SPEC);
-        var result = cipher.doFinal(cipherText);
-        return new String(result);
+        return new String(cipher.doFinal(Base64Utils.decodeFromString(cipherText)));
     }
 }
