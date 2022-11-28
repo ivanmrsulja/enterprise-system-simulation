@@ -12,4 +12,7 @@ public interface BankPaymentRepository extends JpaRepository<BankPayment, Intege
 
     @Query("select bp from BankPayment bp where bp.id = :id and bp.merchantOrderId = :merchantOrderId")
     Optional<BankPayment> getByIdAndMerchantOrderId(Integer id, Long merchantOrderId);
+
+    @Query("select bp from BankPayment bp where bp.merchantOrderId = :merchantOrderId")
+    Optional<BankPayment> getByMerchantOrderId(Long merchantOrderId);
 }
