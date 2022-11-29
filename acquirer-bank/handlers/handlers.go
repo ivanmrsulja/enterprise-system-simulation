@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -70,7 +71,7 @@ func handleTransactionInHouse(w http.ResponseWriter, r *http.Request, creditCard
 	fields := util.ExtractResponseFieldsForLogging(&finalStep)
 	util.LogHttpRequest(r, "Credit Card Payment - Response", &fields)
 
-	json.NewEncoder(w).Encode(finalStep)
+	handleFinalPaymentStep(w, &finalStep)
 
 	if state == dto.SUCCESS {
 		repository.UpdateMerchantAccountBalance(amount, merchantId)
@@ -131,12 +132,35 @@ func handleTransactionOverPCC(w http.ResponseWriter, r *http.Request, creditCard
 	fields = util.ExtractResponseFieldsForLogging(&finalStep)
 	util.LogHttpRequest(r, "Credit Card Payment - PCC Response", &fields)
 
-	json.NewEncoder(w).Encode(finalStep)
+	handleFinalPaymentStep(w, &finalStep)
 
 	if issuerBankResponse.TransactionState == dto.SUCCESS {
 		repository.UpdateMerchantAccountBalance(amount, merchantId)
 	}
 	repository.DeleteOrderTransaction(finalStep.PaymentId)
+}
+
+func handleFinalPaymentStep(w http.ResponseWriter, finalStep *dto.AcquirerBankFinalStep) {
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(finalStep)
+	if err != nil {
+		log.Println(err)
+	}
+
+	req, _ := http.NewRequest(http.MethodPost, util.BasePSPRedirectPathRoundRobin.Next().Host, &buf)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Auth-Token", util.ApiKey)
+	client := &http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
+	io.Copy(w, response.Body)
+	response.Body.Close()
 }
 
 func generateIdAndTimestamp() (int, string) {

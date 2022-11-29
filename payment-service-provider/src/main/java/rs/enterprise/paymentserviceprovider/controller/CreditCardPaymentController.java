@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import rs.enterprise.paymentserviceprovider.clients.AcquirerBankClient;
+import rs.enterprise.paymentserviceprovider.dto.AcquirerBankFinalStepDTO;
 import rs.enterprise.paymentserviceprovider.dto.AcquirerBankPaymentRequestDTO;
 import rs.enterprise.paymentserviceprovider.dto.BankRedirectResponseDTO;
 import rs.enterprise.paymentserviceprovider.dto.PSPRedirectResponseDTO;
 import rs.enterprise.paymentserviceprovider.service.BankPaymentService;
+
+import javax.security.sasl.AuthenticationException;
 
 @RestController
 @RequestMapping("/api/bank-payment")
@@ -37,5 +40,13 @@ public class CreditCardPaymentController {
     @PostMapping("/request-redirect") // ovo privremeno dok se ne cujemo kako izgleda API za PayPal i BTC pa da napravimo nesto genericko :)
     public PSPRedirectResponseDTO requestRedirect(@RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
         return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
+    }
+
+    @PostMapping("/final-redirect")
+    public PSPRedirectResponseDTO finalRedirect(@RequestHeader("X-Auth-Token") String requestApiKey, @RequestBody AcquirerBankFinalStepDTO finalStep) throws AuthenticationException {
+        if(!requestApiKey.equals(apiKey)) {
+            throw new AuthenticationException("Bad api key.");
+        }
+        return new PSPRedirectResponseDTO(bankPaymentService.handleFinalRedirect(finalStep.getTransactionState(), finalStep.getMerchantOrderId()));
     }
 }
