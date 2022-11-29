@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import rs.enterprise.paymentserviceprovider.util.jwt.JwtFilter;
 
 @EnableWebSecurity
@@ -47,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http = http.cors().and().csrf().disable();
+        http = http.csrf().disable();
 
         http = http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
 
@@ -56,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 //api
-                .antMatchers(HttpMethod.POST, "/api/users/authenticate").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/authenticate/first-step").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .anyRequest().permitAll(); // OVO SAMO PRIVREMENO NEMOJ DA SE OBRUKAMO
 
@@ -72,6 +73,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 
 }
