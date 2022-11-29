@@ -1,10 +1,7 @@
 package rs.enterprise.paymentserviceprovider.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rs.enterprise.paymentserviceprovider.clients.DummyClient;
 import rs.enterprise.paymentserviceprovider.dto.DummyDTO;
 import rs.enterprise.paymentserviceprovider.model.Payment;
@@ -47,11 +44,12 @@ public class DummyController {
         paymentServiceFinder.providers(true).forEachRemaining(provider -> {
             PaymentInterface paymentMethod = provider.create();
 
-            if (paymentMethod.getPaymentServiceName().equals(paymentServiceName)) {
-                payments.addAll(paymentMethod.getPayments());
-            }
+//            if (paymentMethod.getPaymentServiceName().equals(paymentServiceName)) {
+//                payments.addAll(paymentMethod.getPayments());
+//            }
         });
 
         return payments;
     }
+
 }
