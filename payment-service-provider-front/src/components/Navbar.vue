@@ -1,51 +1,80 @@
 <template>
-    <ul>
-        <li><router-link :class="path == '/' ? 'active' : ''" to="/">Home</router-link></li>
-        <li><router-link v-if="!loggedIn" :class="path == '/login' ? 'active' : ''" to="/login">Login</router-link></li>
-        <li><router-link v-if="!loggedIn" :class="path == '/register' ? 'active' : ''" to="/register">Register</router-link></li>
-        <li><router-link v-if="loggedIn" :class="path == '/payment-methods' ? 'active' : ''" to="/payment-methods">Payment methods</router-link></li>
-        <li><router-link v-if="loggedIn" @click="logout()" to="/login">Logout</router-link></li>
-    </ul>
+  <ul>
+    <li>
+      <router-link :class="path == '/' ? 'active' : ''" to="/"
+        >Home</router-link
+      >
+    </li>
+    <li>
+      <router-link
+        v-if="!loggedIn"
+        :class="path == '/login' ? 'active' : ''"
+        to="/login"
+        >Login</router-link
+      >
+    </li>
+    <li>
+      <router-link
+        v-if="!loggedIn"
+        :class="path == '/register' ? 'active' : ''"
+        to="/register"
+        >Register</router-link
+      >
+    </li>
+    <li>
+      <router-link
+        v-if="loggedIn"
+        :class="path == '/payment-methods' ? 'active' : ''"
+        to="/payment-methods"
+        >Payment methods</router-link
+      >
+    </li>
+    <li>
+      <router-link v-if="loggedIn" @click="logout()" to="/login"
+        >Logout</router-link
+      >
+    </li>
+  </ul>
 </template>
 
 <script>
-import {useRoute} from 'vue-router'
-import {computed, ref, onMounted, inject} from 'vue'
-import { authService } from '../service/authService'
+import { useRoute } from "vue-router";
+import { computed, ref, onMounted, inject } from "vue";
+import { authService } from "../service/authService";
 
 export default {
-    name: "navbar",
-    setup(){
-        const loggedIn = ref(false)
-        const roles = ref("")
+  name: "navbar",
+  setup() {
+    const loggedIn = ref(false);
+    const roles = ref("");
 
-        const route = useRoute()
-        const path = computed(() => route.path)
+    const route = useRoute();
+    const path = computed(() => route.path);
 
-        const router = inject('router');
-        const emitter = inject('emitter');
+    const router = inject("router");
+    const emitter = inject("emitter");
 
-        onMounted(() => {
-          if (authService.userLoggedIn()) {
-            let decodedToken = authService.getDecodedToken();
-            loggedIn.value = true;
-            roles.value = decodedToken.roles;
-          }
-          emitter.on("loginSuccess", (role) => {
-              loggedIn.value = authService.userLoggedIn();
-              roles.value = role;
-          });
-        });
+    onMounted(() => {
+      if (authService.userLoggedIn()) {
+        let decodedToken = authService.getDecodedToken();
+        loggedIn.value = true;
+        roles.value = decodedToken.roles;
+      }
+      emitter.on("loginSuccess", (role) => {
+        loggedIn.value = authService.userLoggedIn();
+        roles.value = role;
+      });
+    });
 
-        const logout = () => {
-            sessionStorage.removeItem("jwt");
-            loggedIn.value = false;
-            router.push({ name: "login" });
-        }
+    const logout = () => {
+      sessionStorage.removeItem("jwt");
+      loggedIn.value = false;
+      router.push({ name: "login" });
+    };
 
-        return {path, loggedIn, logout}
-    },
-}
+    return { path, loggedIn, logout };
+  },
+};
 </script>
 
 <style scoped>
@@ -74,6 +103,6 @@ li a:hover:not(.active) {
 }
 
 .active {
-  background-color: #04AA6D;
+  background-color: #04aa6d;
 }
 </style>

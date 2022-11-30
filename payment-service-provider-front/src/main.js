@@ -1,13 +1,13 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import vuetify from './plugins/vuetify'
-import { loadFonts } from './plugins/webfontloader'
-import axios from 'axios'
-import jwt_decode from 'jwt-decode'
-import mitt from 'mitt';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import vuetify from "./plugins/vuetify";
+import { loadFonts } from "./plugins/webfontloader";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import mitt from "mitt";
 
-loadFonts()
+loadFonts();
 
 // Configure axios to always include JWT when sending a request
 axios.interceptors.request.use(
@@ -52,12 +52,12 @@ router.beforeEach((to, from, next) => {
 
 const emitter = mitt();
 
-const app = createApp(App)
+const app = createApp(App);
 app.config.globalProperties.emitter = emitter;
-app.use(router)
-app.use(vuetify)
+app.use(router);
+app.use(vuetify);
 
-app.provide('router', router)
-app.provide('emitter', emitter)
+app.provide("router", router);
+app.provide("emitter", emitter);
 
-app.mount('#app')
+app.mount("#app");

@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import axios from "axios"
+import axios from "axios";
 
 class AuthService {
   login(payload) {
@@ -12,6 +12,13 @@ class AuthService {
   loginSecondStep(payload) {
     return axios.post(
       `${import.meta.env.VITE_BASE_PATH}/users/authenticate/second-step`,
+      payload
+    );
+  }
+
+  registerMerchant(payload) {
+    return axios.post(
+      `${import.meta.env.VITE_BASE_PATH}/users/register`,
       payload
     );
   }
