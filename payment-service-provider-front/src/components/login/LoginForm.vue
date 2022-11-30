@@ -122,7 +122,7 @@
                 }
           })
           .catch((error) => {
-                if (error.response) this.text = error.response.data.message;
+                console.log(error)
                 this.text = "Check your 2FA code and try again.";
                 this.snackbar = true;
                 this.loginBtnLoading = false;

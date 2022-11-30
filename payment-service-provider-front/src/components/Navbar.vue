@@ -10,45 +10,40 @@
 
 <script>
 import {useRoute} from 'vue-router'
-import {computed} from 'vue'
+import {computed, ref, onMounted, inject} from 'vue'
 import { authService } from '../service/authService'
 
 export default {
     name: "navbar",
     setup(){
+        const loggedIn = ref(false)
+        const roles = ref("")
+
         const route = useRoute()
         const path = computed(() => route.path)
-        return {path}
-    },
-    data() {
-    return {
-      loggedIn: false,
-      roles: "",
-      snackbarMessage: "Error logging out.",
-      snackbar: false,
-      timeout: 5000,
-    };
-    },
-    mounted() {
-        if (authService.userLoggedIn()) {
+
+        const router = inject('router');
+        const emitter = inject('emitter');
+
+        onMounted(() => {
+          if (authService.userLoggedIn()) {
             let decodedToken = authService.getDecodedToken();
-            this.loggedIn = true;
-            this.roles = decodedToken.roles;
-        }
-        this.emitter.on("loginSuccess", (roles) => {
-            this.loggedIn = authService.userLoggedIn();
-            this.roles = roles;
+            loggedIn.value = true;
+            roles.value = decodedToken.roles;
+          }
+          emitter.on("loginSuccess", (role) => {
+              loggedIn.value = authService.userLoggedIn();
+              roles.value = role;
+          });
         });
-    },
-    methods: {
-        redirect(routeName) {
-            this.$router.push({ name: routeName }).catch((error) => {});
-        },
-        logout() {
+
+        const logout = () => {
             sessionStorage.removeItem("jwt");
-            this.loggedIn = false;
-            this.$router.push({ name: "login" });
-        },
+            loggedIn.value = false;
+            router.push({ name: "login" });
+        }
+
+        return {path, loggedIn, logout}
     },
 }
 </script>

@@ -56,4 +56,8 @@ const app = createApp(App)
 app.config.globalProperties.emitter = emitter;
 app.use(router)
 app.use(vuetify)
+
+app.provide('router', router)
+app.provide('emitter', emitter)
+
 app.mount('#app')
