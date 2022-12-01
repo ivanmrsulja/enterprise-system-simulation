@@ -37,6 +37,15 @@ const router = createRouter({
       },
     },
     {
+      path: "/make-payment/:merchantOrderId/:transactionId/:merchantId",
+      name: "make-payment",
+      component: () => import("../views/PaymentChoiceView.vue"),
+      meta: {
+        authenticated: false,
+        authorities: [],
+      },
+    },
+    {
       path: "/payment-methods",
       name: "paymentMethods",
       component: () => import("../views/PaymentMethodsView.vue"),

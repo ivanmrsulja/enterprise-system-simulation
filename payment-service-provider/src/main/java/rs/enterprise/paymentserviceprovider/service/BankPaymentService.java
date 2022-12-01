@@ -35,7 +35,7 @@ public class BankPaymentService {
                         paymentRequest.getFailedUrl(),
                         paymentRequest.getErrorUrl()));
 
-        return "URL BASE/" + savedPayment.getMerchantOrderId() + "/" + savedPayment.getId() + "/" + savedPayment.getMerchantId();
+        return "http://127.0.0.1:5173/make-payment/" + savedPayment.getMerchantOrderId() + "/" + savedPayment.getId() + "/" + savedPayment.getMerchantId();
     }
 
     public AcquirerBankPaymentRequestDTO fetchBankPaymentRequest(Long merchantOrderId, Integer bankPaymentId) throws Exception {
