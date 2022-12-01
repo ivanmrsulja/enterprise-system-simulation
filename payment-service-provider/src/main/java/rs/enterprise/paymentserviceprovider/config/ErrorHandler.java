@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
-import rs.enterprise.paymentserviceprovider.util.ErrorObject;
+import rs.enterprise.paymentserviceprovider.model.util.ErrorObject;
 
 import javax.servlet.http.HttpServletRequest;
 

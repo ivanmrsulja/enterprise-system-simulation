@@ -1,4 +1,4 @@
-package rs.enterprise.paymentserviceprovider.util.jwt;
+package rs.enterprise.paymentserviceprovider.model.util.jwt;
 
 
 import io.jsonwebtoken.Claims;
@@ -79,6 +79,7 @@ public class JwtUtil {
                 .claim("jwt-security", jwtSecurityHash)
                 .claim("roles", user.getAuthority().getAuthority())
                 .claim("userId", user.getId())
+                .claim("companyName", user.getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenValidity))
                 .signWith(signatureAlgorithm, signingKey)

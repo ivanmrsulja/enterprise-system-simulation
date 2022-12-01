@@ -1,4 +1,4 @@
-package rs.enterprise.paymentserviceprovider.util;
+package rs.enterprise.paymentserviceprovider.model.util;
 
 import org.springframework.http.HttpStatus;
 

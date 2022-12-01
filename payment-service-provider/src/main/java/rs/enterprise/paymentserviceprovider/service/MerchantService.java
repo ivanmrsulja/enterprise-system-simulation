@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import rs.enterprise.paymentserviceprovider.dto.RegisterDTO;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.Merchant;
+import rs.enterprise.paymentserviceprovider.model.util.SecureStringGenerator;
 import rs.enterprise.paymentserviceprovider.repository.AuthorityRepository;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
-import rs.enterprise.paymentserviceprovider.util.SecureStringGenerator;
 
 import javax.transaction.Transactional;
 

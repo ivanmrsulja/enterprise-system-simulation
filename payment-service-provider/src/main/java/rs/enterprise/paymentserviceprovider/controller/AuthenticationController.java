@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.enterprise.paymentserviceprovider.annotation.Log;
 import rs.enterprise.paymentserviceprovider.clients.AcquirerBankClient;
 import rs.enterprise.paymentserviceprovider.dto.*;
+import rs.enterprise.paymentserviceprovider.model.util.jwt.JwtUtil;
 import rs.enterprise.paymentserviceprovider.service.MerchantService;
 import rs.enterprise.paymentserviceprovider.service.TwoFactorAuthenticationService;
-import rs.enterprise.paymentserviceprovider.util.jwt.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -13,8 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import rs.enterprise.paymentserviceprovider.util.jwt.JwtFilter;
+import rs.enterprise.paymentserviceprovider.model.util.jwt.JwtFilter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

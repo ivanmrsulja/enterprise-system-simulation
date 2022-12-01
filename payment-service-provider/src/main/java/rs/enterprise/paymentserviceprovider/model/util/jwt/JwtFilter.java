@@ -1,4 +1,4 @@
-package rs.enterprise.paymentserviceprovider.util.jwt;
+package rs.enterprise.paymentserviceprovider.model.util.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
