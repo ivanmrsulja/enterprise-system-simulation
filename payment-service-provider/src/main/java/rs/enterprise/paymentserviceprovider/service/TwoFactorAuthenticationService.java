@@ -36,7 +36,8 @@ public class TwoFactorAuthenticationService {
     }
 
     public void createNewAuthToken(String merchantId, String token) throws Exception {
-        var merchant = merchantRepository.findByMerchantId(merchantId).orElseThrow(() -> new NotFoundException("There is no merchant present with ID: " + merchantId));
+        var merchant = merchantRepository.findByMerchantId(merchantId)
+                .orElseThrow(() -> new NotFoundException("There is no merchant present with ID: " + merchantId));
         var pin = secureStringGenerator.generate(5);
         var twoFAToken = new TwoFactorAuthenticationToken(merchantId, pin, encryptionUtil.encrypt(token));
         twoFactorAuthenticationTokenRepository.save(twoFAToken);

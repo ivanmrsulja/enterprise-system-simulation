@@ -54,8 +54,8 @@ public class AuthenticationController {
                 new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getMerchantId(), authenticationRequestDTO.getMerchantPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwtSecurity = tokenUtil.generateJWTSecurity();
-        String token = tokenUtil.generateToken(authentication, jwtSecurity);
+        var jwtSecurity = tokenUtil.generateJWTSecurity();
+        var token = tokenUtil.generateToken(authentication, jwtSecurity);
         twoFactorAuthenticationService.createNewAuthToken(authenticationRequestDTO.getMerchantId(), token);
         return new ResponseEntity<>(new AuthenticationResponseDTO("PATIENCE_MY_YOUNG_PADAWAN"), HttpStatus.OK);
     }
