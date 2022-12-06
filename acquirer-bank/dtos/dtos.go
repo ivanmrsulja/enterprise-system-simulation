@@ -88,3 +88,8 @@ type AcquirerBankMerchantAuthentication struct {
 	MerchantId       string `json:"merchantId" validate:"regexp=[a-zA-Z0-9]{30}"`
 	MerchantPassword string `json:"merchantPassword" validate:"regexp=[a-zA-Z0-9]{100}"`
 }
+
+type TransactionInfo struct {
+	Amount    float64 `json:"amount"`
+	MerchantName string    `json:"merchantName"`
+}
