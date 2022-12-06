@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strconv"
 
+	dto "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/dtos"
 	model "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/model"
 	util "github.com/ivanmrsulja/enterprise-system-simulation/acquirer-bank/util"
 )
@@ -49,6 +50,29 @@ func FindOrderTransaction(paymentId int) (model.Transaction, error) {
 	}
 
 	return transaction, nil
+}
+
+func GetTransactionInfo(paymentId int) (dto.TransactionInfo, error) {
+	var transactionInfo dto.TransactionInfo
+	var transaction model.Transaction
+
+	util.Db.Where(&model.Transaction{PaymentId: paymentId}).First(&transaction)
+
+	if transaction.ID == 0 {
+		return transactionInfo, errors.New("transaction with given payment ID does not exist")
+	}
+
+	var merchant model.MerchantAccount
+	util.Db.Where(&model.MerchantAccount{MerchantId: transaction.MerchantId}).First(&merchant)
+	
+	if merchant.ID == 0 {
+		return transactionInfo, errors.New("no merchant for payment")
+	}
+
+	transactionInfo.Amount = transaction.Amount
+	transactionInfo.MerchantName = merchant.MerchantName
+
+	return transactionInfo, nil
 }
 
 func DeleteOrderTransaction(paymentId int) error {

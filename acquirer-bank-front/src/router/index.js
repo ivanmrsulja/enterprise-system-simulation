@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,8 +9,8 @@ const router = createRouter({
       component: () => import("../views/CreditCardPayment.vue"),
     },
     {
-      path: "/card-payment",
-      name: "card-payment",
+      path: "/payment/:merchantOrderId/:paymentId/:method",
+      name: "payment",
       component: () => import("../views/CreditCardPayment.vue"),
     },
     {
@@ -26,4 +25,3 @@ const router = createRouter({
 });
 
 export default router;
- 

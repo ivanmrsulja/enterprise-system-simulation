@@ -37,7 +37,14 @@
       </v-list-item>
 
       <v-card-actions>
-        <v-btn outlined rounded text color="#04aa6d">Pay</v-btn>
+        <v-btn
+          outlined
+          rounded
+          text
+          color="#04aa6d"
+          @click="makePayment(paymentMethod)"
+          >Pay</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-container>
@@ -47,6 +54,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { paymentMethodService } from "../../service/paymentMethodService";
+import { paymentService } from "../../service/paymentService";
 
 export default {
   name: "PaymentChoice",
@@ -62,7 +70,25 @@ export default {
         });
     });
 
-    return { merchantPaymentMethods };
+    const makePayment = (method) => {
+      let methodUrlLabel = method.replace(" ", "");
+      if (methodUrlLabel === "CreditCard" || methodUrlLabel === "QRCode") {
+        paymentService
+          .getRedirectToBank(
+            route.params.merchantOrderId,
+            route.params.transactionId,
+            methodUrlLabel
+          )
+          .then((response) => {
+            window.open(response.data.paymentUrl, "_blank");
+          });
+      } else {
+        // TODO: Ovdje dodati da se genericki odradi placanje 3rd party servisom
+        console.log(methodUrlLabel);
+      }
+    };
+
+    return { merchantPaymentMethods, makePayment };
   },
 };
 </script>
