@@ -7,14 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rs.enterprise.paymentserviceprovider.annotation.Log;
 import rs.enterprise.paymentserviceprovider.clients.AcquirerBankClient;
 import rs.enterprise.paymentserviceprovider.dto.*;
-import rs.enterprise.paymentserviceprovider.model.util.jwt.JwtUtil;
+import rs.enterprise.paymentserviceprovider.exception.InvalidUsernameOrPasswordException;
+import rs.enterprise.paymentserviceprovider.util.jwt.JwtUtil;
 import rs.enterprise.paymentserviceprovider.service.MerchantService;
 import rs.enterprise.paymentserviceprovider.service.TwoFactorAuthenticationService;
 
@@ -69,9 +67,10 @@ public class AuthenticationController {
 
     @Log(message = "Registration attempt.")
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDTO register(HttpServletRequest request, @RequestBody RegisterDTO registrationRequest) {
         if (!acquirerBankClient.authenticateMerchant(apiKey, new AcquirerBankMerchantAuthenticationDTO(registrationRequest.getMerchantId(), registrationRequest.getMerchantPassword()))) {
-            throw new RuntimeException();
+            throw new InvalidUsernameOrPasswordException("Username and password that you have provided do not match.");
         }
         var newUser = merchantService.register(registrationRequest);
         return new RegistrationResponseDTO(newUser.getMerchantId(), newUser.getApiKey(), newUser.getName());

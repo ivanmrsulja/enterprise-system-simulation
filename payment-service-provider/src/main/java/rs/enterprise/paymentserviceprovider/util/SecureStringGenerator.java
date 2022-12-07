@@ -1,4 +1,4 @@
-package rs.enterprise.paymentserviceprovider.model.util;
+package rs.enterprise.paymentserviceprovider.util;
 
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 public class SecureStringGenerator {
 
     public String generate(Integer targetStringLength) {
-        int leftLimit = 48; // numeral '0'
+        int leftLimit = 48; // digit '0'
         int rightLimit = 122; // letter 'z'
         SecureRandom random = new SecureRandom();
 

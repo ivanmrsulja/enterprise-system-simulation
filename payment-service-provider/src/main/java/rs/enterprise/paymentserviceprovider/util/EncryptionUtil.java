@@ -1,4 +1,4 @@
-package rs.enterprise.paymentserviceprovider.model.util;
+package rs.enterprise.paymentserviceprovider.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

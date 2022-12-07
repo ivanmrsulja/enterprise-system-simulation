@@ -28,7 +28,7 @@ public class BeanConfig {
         try {
             keygenerator = KeyGenerator.getInstance("AES");
         } catch (NoSuchAlgorithmException e) {
-            return null;
+            return null; // If this ever returns null, check dependencies and rebuild the project.
         }
 
         keygenerator.init(256, secureRandom);
