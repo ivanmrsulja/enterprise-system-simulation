@@ -6,20 +6,17 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../views/CreditCardPayment.vue"),
+      component: () => import("../views/HomeView.vue"),
     },
     {
-      path: "/payment/:merchantOrderId/:paymentId/:method",
-      name: "payment",
-      component: () => import("../views/CreditCardPayment.vue"),
+      path: "/payment/:merchantOrderId/:paymentId/credit-card",
+      name: "credit-card-payment",
+      component: () => import("../views/CreditCardPaymentView.vue"),
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
+      path: "/payment/:merchantOrderId/:paymentId/qr-code",
+      name: "qr-code-payment",
+      component: () => import("../views/QRCodePaymentView.vue"),
     },
   ],
 });

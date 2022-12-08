@@ -71,8 +71,8 @@ export default {
     });
 
     const makePayment = (method) => {
-      let methodUrlLabel = method.replace(" ", "");
-      if (methodUrlLabel === "CreditCard" || methodUrlLabel === "QRCode") {
+      let methodUrlLabel = method.replace(" ", "-").toLowerCase();
+      if (methodUrlLabel === "credit-card" || methodUrlLabel === "qr-code") {
         paymentService
           .getRedirectToBank(
             route.params.merchantOrderId,
