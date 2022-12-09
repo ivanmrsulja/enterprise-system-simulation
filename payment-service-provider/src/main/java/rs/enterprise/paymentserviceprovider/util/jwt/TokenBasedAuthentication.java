@@ -1,4 +1,4 @@
-package rs.enterprise.paymentserviceprovider.model.util.jwt;
+package rs.enterprise.paymentserviceprovider.util.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

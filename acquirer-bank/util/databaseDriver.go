@@ -15,7 +15,7 @@ var (
 		{Pan: Bytes2StrRaw(Hash("1111111111")), SecurityCode: Bytes2StrRaw(Hash("725")), CardHolderName: Bytes2StrRaw(Hash("Vesna Savic")), ExpiryDate: Bytes2StrRaw(Hash("10/24")), Balance: 30000},
 	}
 	merchantAccounts = []model.MerchantAccount{
-		{MerchantId: "j4komDDBwXVWoHg4ej6WMVqdD6U9qE", MerchantPassword: Bytes2StrRaw(Hash("j0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg")), MerchantName: "WebShop 1"},
+		{MerchantId: "j4komDDBwXVWoHg4ej6WMVqdD6U9qE", MerchantPassword: Bytes2StrRaw(Hash("j0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg")), MerchantName: "Monsters INC"},
 		{MerchantId: "k4komDDBwXVWoHg4ej6WMVqdD6U9qE", MerchantPassword: Bytes2StrRaw(Hash("k0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg")), MerchantName: "WebShop 2"},
 	}
 )

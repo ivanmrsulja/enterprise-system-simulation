@@ -36,12 +36,14 @@ public class PaymentMethodService {
     }
 
     public Set<String> getAllAvailablePaymentMethodsForMerchant(String merchantId) {
-        var merchant =  merchantRepository.findByMerchantId(merchantId).orElseThrow(() -> new NotFoundException("Merchant with given merchant ID does not exist."));
+        var merchant =  merchantRepository.findByMerchantId(merchantId)
+                .orElseThrow(() -> new NotFoundException("Merchant with given merchant ID does not exist."));
         return merchant.getPaymentMethods();
     }
 
     public void setPaymentMethodsForMerchant(Integer merchantId, Set<String> paymentMethods) {
-        var merchant =  merchantRepository.findById(merchantId).orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
+        var merchant =  merchantRepository.findById(merchantId)
+                .orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
         merchant.setPaymentMethods(paymentMethods);
 
         merchantRepository.save(merchant);

@@ -6,7 +6,7 @@ import rs.enterprise.paymentserviceprovider.dto.AcquirerBankPaymentRequestDTO;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.BankPayment;
 import rs.enterprise.paymentserviceprovider.model.enums.TransactionState;
-import rs.enterprise.paymentserviceprovider.model.util.EncryptionUtil;
+import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
 import rs.enterprise.paymentserviceprovider.repository.BankPaymentRepository;
 
 @Service

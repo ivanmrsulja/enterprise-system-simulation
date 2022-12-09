@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.TwoFactorAuthenticationToken;
-import rs.enterprise.paymentserviceprovider.model.util.EncryptionUtil;
-import rs.enterprise.paymentserviceprovider.model.util.SecureStringGenerator;
+import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
+import rs.enterprise.paymentserviceprovider.util.SecureStringGenerator;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.repository.TwoFactorAuthenticationTokenRepository;
 
@@ -36,7 +36,8 @@ public class TwoFactorAuthenticationService {
     }
 
     public void createNewAuthToken(String merchantId, String token) throws Exception {
-        var merchant = merchantRepository.findByMerchantId(merchantId).orElseThrow(() -> new NotFoundException("There is no merchant present with ID: " + merchantId));
+        var merchant = merchantRepository.findByMerchantId(merchantId)
+                .orElseThrow(() -> new NotFoundException("There is no merchant present with ID: " + merchantId));
         var pin = secureStringGenerator.generate(5);
         var twoFAToken = new TwoFactorAuthenticationToken(merchantId, pin, encryptionUtil.encrypt(token));
         twoFactorAuthenticationTokenRepository.save(twoFAToken);
