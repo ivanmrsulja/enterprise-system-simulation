@@ -1,7 +1,7 @@
 <template>
   <div>
     <qrcode-vue :value="value" :size=150 />
-    <button @click="procedWithPayment()">Proced mock payment</button>
+    <button @click="simulateScanning()">Simulate qr code scanning</button>
   </div>
 </template>
 
@@ -41,8 +41,8 @@ export default {
       }
     });
 
-    const procedWithPayment = () => {
-      //
+    const simulateScanning = () => {
+      // Create object and call appropriate api
     }
 
     const createQrRequestBody = () => {
