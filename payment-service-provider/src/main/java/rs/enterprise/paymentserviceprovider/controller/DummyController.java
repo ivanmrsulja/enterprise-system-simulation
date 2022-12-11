@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import rs.enterprise.paymentserviceprovider.clients.DummyClient;
 import rs.enterprise.paymentserviceprovider.dto.DummyDTO;
-import rs.enterprise.paymentserviceprovider.model.Payment;
+import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 import rs.enterprise.paymentserviceprovider.service.PaymentInterface;
 import rs.enterprise.paymentserviceprovider.spi.PaymentServiceFinder;
 
@@ -39,8 +39,8 @@ public class DummyController {
     }
 
     @GetMapping("/payments")
-    public List<Payment> getPayments(@RequestParam String paymentServiceName) {
-        var payments = new ArrayList<Payment>();
+    public List<CustomPayment> getPayments(@RequestParam String paymentServiceName) {
+        var payments = new ArrayList<CustomPayment>();
         paymentServiceFinder.providers(true).forEachRemaining(provider -> {
             PaymentInterface paymentMethod = provider.create();
 

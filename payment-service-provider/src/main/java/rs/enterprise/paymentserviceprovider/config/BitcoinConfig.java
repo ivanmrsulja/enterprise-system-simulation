@@ -2,8 +2,6 @@ package rs.enterprise.paymentserviceprovider.config;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +32,7 @@ public class BitcoinConfig {
 
     @Bean
     public NetworkParameters networkParameters() {
-        if(network.equals("testnet")) {
-            return TestNet3Params.get();
-        } else if(network.equals("regtest")) {
-            return RegTestParams.get();
-        } else {
-            return MainNetParams.get();
-        }
+        return TestNet3Params.get();
     }
 
     @Bean

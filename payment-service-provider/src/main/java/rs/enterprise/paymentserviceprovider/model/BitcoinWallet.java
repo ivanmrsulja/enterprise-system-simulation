@@ -29,12 +29,12 @@ public class BitcoinWallet {
         walletAppKit.wallet().addCoinsReceivedEventListener(
                 (wallet, tx, prevBalance, newBalance) -> {
                     Coin value = tx.getValueSentToMe(wallet);
-                    System.out.println("Received tx for " + value.toFriendlyString());
+                    System.out.println("Received coins " + value.toFriendlyString());
                     Futures.addCallback(tx.getConfidence().getDepthFuture(1),
                             new FutureCallback<TransactionConfidence>() {
                                 @Override
                                 public void onSuccess(TransactionConfidence result) {
-                                    System.out.println("Received tx " +
+                                    System.out.println("Received coins " +
                                             value.toFriendlyString() + " is confirmed. ");
                                 }
 
@@ -55,7 +55,7 @@ public class BitcoinWallet {
             sendRequest.feePerKb = Coin.parseCoin("0.0005");
             Wallet.SendResult sendResult = walletAppKit.wallet().sendCoins(walletAppKit.peerGroup(), sendRequest);
             sendResult.broadcastComplete.addListener(() ->
-                            System.out.println("Sent coins onwards! Transaction hash is " + sendResult.tx.getTxId()),
+                            System.out.println("Transaction hash is " + sendResult.tx.getTxId()),
                     MoreExecutors.directExecutor());
         } catch (InsufficientMoneyException e) {
             throw  new RuntimeException(e);

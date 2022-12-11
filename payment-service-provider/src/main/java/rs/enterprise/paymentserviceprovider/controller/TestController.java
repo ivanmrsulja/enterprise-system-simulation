@@ -26,44 +26,44 @@ public class TestController {
     public static final String PAYPAL_SUCCESS_URL = "/api/test/pay/success";
     public static final String PAYPAL_CANCEL_URL = "/api/test/pay/cancel";
 
-    @RequestMapping(value = "/sendBitcoins")
-    public String sendBitcoins(@RequestParam String amount, @RequestParam String address) {
-        bitcoinWallet.send(amount, address);
-        return "Nice";
-    }
-
-    @PostMapping(value = "pay")
-    public String pay(HttpServletRequest request){
-        String cancelUrl = URLBuilder.getBaseURL(request)  + PAYPAL_CANCEL_URL;
-        String successUrl = URLBuilder.getBaseURL(request)  + PAYPAL_SUCCESS_URL;
-
-        try {
-            Payment payment = paymentInterface.createPayment(
-                    4.00,
-                    "USD",
-                    PaymentMethod.paypal,
-                    PaymentIntent.sale,
-                    "payment description",
-                    cancelUrl,
-                    successUrl);
-            for(Links links : payment.getLinks()){
-                if(links.getRel().equals("approval_url")){
-                    return "success:" + links.getHref();
-                }
-            }
-        } catch (PayPalRESTException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return "failed:/";
-    }
-
-    @GetMapping(value = "pay/success")
-    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) throws PayPalRESTException {
-        Payment payment = paymentInterface.executePayment(paymentId, payerId);
-        if (payment.getState().equals("approved")) {
-            return "success";
-        }
-        return "failed";
-    }
+//    @RequestMapping(value = "/sendBitcoins")
+//    public String sendBitcoins(@RequestParam String amount, @RequestParam String address) {
+//        bitcoinWallet.send(amount, address);
+//        return "Nice";
+//    }
+//
+//    @PostMapping(value = "pay")
+//    public String pay(HttpServletRequest request){
+//        String cancelUrl = URLBuilder.getBaseURL(request)  + PAYPAL_CANCEL_URL;
+//        String successUrl = URLBuilder.getBaseURL(request)  + PAYPAL_SUCCESS_URL;
+//
+//        try {
+//            Payment payment = paymentInterface.createPayment(
+//                    4.00,
+//                    "USD",
+//                    PaymentMethod.paypal,
+//                    PaymentIntent.sale,
+//                    "payment description",
+//                    cancelUrl,
+//                    successUrl);
+//            for(Links links : payment.getLinks()){
+//                if(links.getRel().equals("approval_url")){
+//                    return "success:" + links.getHref();
+//                }
+//            }
+//        } catch (PayPalRESTException e) {
+//            System.err.println(e.getMessage());
+//        }
+//
+//        return "failed:/";
+//    }
+//
+//    @GetMapping(value = "pay/success")
+//    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) throws PayPalRESTException {
+//        Payment payment = paymentInterface.executePayment(paymentId, payerId);
+//        if (payment.getState().equals("approved")) {
+//            return "success";
+//        }
+//        return "failed";
+//    }
 }
