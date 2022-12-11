@@ -87,6 +87,17 @@
 			<artifactId>rest-api-sdk</artifactId>
 			<version>1.13.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.bitcoinj</groupId>
+			<artifactId>bitcoinj-core</artifactId>
+			<version>0.15</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.1-jre</version>
+		</dependency>
 	</dependencies>
 
 	<build>

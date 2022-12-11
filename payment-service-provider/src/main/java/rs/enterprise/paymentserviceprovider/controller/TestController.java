@@ -4,6 +4,7 @@ import com.paypal.api.payments.Links;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import rs.enterprise.paymentserviceprovider.model.BitcoinWallet;
 import rs.enterprise.paymentserviceprovider.model.enums.PaymentIntent;
 import rs.enterprise.paymentserviceprovider.model.enums.PaymentMethod;
 import rs.enterprise.paymentserviceprovider.service.impl.PaypalPaymentServiceImpl;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/api/test")
 public class TestController {
+    @Autowired
+    private BitcoinWallet bitcoinWallet;
 
     //TODO ovo izmjeniti i prilagoditi nakon odradjenog bitcoina
     @Autowired
@@ -23,6 +26,11 @@ public class TestController {
     public static final String PAYPAL_SUCCESS_URL = "/api/test/pay/success";
     public static final String PAYPAL_CANCEL_URL = "/api/test/pay/cancel";
 
+    @RequestMapping(value = "/sendBitcoins")
+    public String sendBitcoins(@RequestParam String amount, @RequestParam String address) {
+        bitcoinWallet.send(amount, address);
+        return "Nice";
+    }
 
     @PostMapping(value = "pay")
     public String pay(HttpServletRequest request){
