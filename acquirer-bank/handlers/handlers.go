@@ -25,7 +25,7 @@ func CreditCardPaymentHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		return
 	}
-	
+
 	var creditCardInfo dto.CreditCardInfo
 	json.NewDecoder(r.Body).Decode(&creditCardInfo)
 
@@ -243,10 +243,27 @@ func GetTransactionDetails(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		return
 	}
-	
+
 	id, _ := strconv.Atoi(mux.Vars(r)["paymentId"])
-    
+
 	transactionInfo, err := repository.GetTransactionInfo(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(transactionInfo)
+}
+
+func GetTransactionDetailsForQrCode(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	util.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	id, _ := strconv.Atoi(mux.Vars(r)["paymentId"])
+
+	transactionInfo, err := repository.GetTransactionInfoForQrCode(id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

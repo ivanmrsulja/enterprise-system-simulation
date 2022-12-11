@@ -64,13 +64,37 @@ func GetTransactionInfo(paymentId int) (dto.TransactionInfo, error) {
 
 	var merchant model.MerchantAccount
 	util.Db.Where(&model.MerchantAccount{MerchantId: transaction.MerchantId}).First(&merchant)
-	
+
 	if merchant.ID == 0 {
 		return transactionInfo, errors.New("no merchant for payment")
 	}
 
 	transactionInfo.Amount = transaction.Amount
 	transactionInfo.MerchantName = merchant.MerchantName
+
+	return transactionInfo, nil
+}
+
+func GetTransactionInfoForQrCode(paymentId int) (dto.TransactionInfoForQrCode, error) {
+	var transactionInfo dto.TransactionInfoForQrCode
+	var transaction model.Transaction
+
+	util.Db.Where(&model.Transaction{PaymentId: paymentId}).First(&transaction)
+
+	if transaction.ID == 0 {
+		return transactionInfo, errors.New("transaction with given payment ID does not exist")
+	}
+
+	var merchant model.MerchantAccount
+	util.Db.Where(&model.MerchantAccount{MerchantId: transaction.MerchantId}).First(&merchant)
+
+	if merchant.ID == 0 {
+		return transactionInfo, errors.New("no merchant for payment")
+	}
+
+	transactionInfo.MerchantId = merchant.MerchantId
+	transactionInfo.MerchantName = merchant.MerchantName
+	transactionInfo.Amount = transaction.Amount
 
 	return transactionInfo, nil
 }

@@ -90,6 +90,12 @@ type AcquirerBankMerchantAuthentication struct {
 }
 
 type TransactionInfo struct {
-	Amount    float64 `json:"amount"`
-	MerchantName string    `json:"merchantName"`
+	Amount       float64 `json:"amount"`
+	MerchantName string  `json:"merchantName"`
+}
+
+type TransactionInfoForQrCode struct {
+	MerchantId   string  `json:"merchantId"`
+	MerchantName string  `json:"merchantName"`
+	Amount       float64 `json:"amount"`
 }
