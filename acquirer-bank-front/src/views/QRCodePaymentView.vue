@@ -1,7 +1,12 @@
 <template>
   <div>
-    <qrcode-vue :value="value" :size=150 />
-    <button @click="simulateScanning()">Simulate qr code scanning</button>
+    <center>
+      <qrcode-vue :value="qrCode" :size=150 />
+      <h1 class="typewriter">
+        Scan this qr code in order to pay for services you want to buy
+      </h1>
+      <button @click="simulateScanning()">Simulate qr code scanning</button>
+    </center>
   </div>
 </template>
 
@@ -22,22 +27,36 @@ export default {
     const qrCode = ref("");
 
     onMounted(async () => {
+      const paymentId = route.params.paymentId;
       try {
-        const response = await paymentService.getTransactionDetailsForQrCode(route.params.paymentId);
+        const response = await paymentService.getTransactionDetailsForQrCode(paymentId);
+        console.log(response);
         merchantId.value = response.data.merchantId;
         merchantName.value = response.data.merchantName;
         paymentAmount.value = response.data.amount;
       } catch(err) {
+        console.log(`Error occurred while loading transaction details for payment id: ${paymentId}`);
         console.log(err);
         return;
       }
 
       const qrRequest = createQrRequestBody();
       try {
+        const response = qrCodeService.validateQr(qrRequest);
+        console.log(response);
+      } catch(err) {
+        console.log(err)
+        return;
+      }
+
+      try {
         const response = await qrCodeService.generateQr(qrRequest);
+        console.log(response);
         qrCode.value = response.data.i;
       } catch(err) {
-        console.log(err);
+        console.log(`Error occurred while generating qr code for data: ${qrRequest}`);
+        console.log(err)
+        return;
       }
     });
 
@@ -52,9 +71,13 @@ export default {
         C: "1",
         R: merchantId.value,
         N: `Payment for ${merchantName.value} on payment id: ${route.params.paymentId}`,
-        I: `RSD${paymentAmount.value}`,
+        I: `RSD${formatAmout()}`,
         SF: "129"
       };
+    }
+
+    const formatAmout = () => {
+      return paymentAmount.value.toFixed(2).toString().replace(".", ",");
     }
 
     return { qrCode };
