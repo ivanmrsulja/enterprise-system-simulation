@@ -1,7 +1,7 @@
 <template>
   <div>
     <center>
-      <qrcode-vue :value="qrCode" :size=150 />
+      <img :src="'data:image/png;base64,' + qrCode" />
       <h1 class="typewriter">
         Scan this qr code in order to pay for services you want to buy
       </h1>
@@ -30,7 +30,6 @@ export default {
       const paymentId = route.params.paymentId;
       try {
         const response = await paymentService.getTransactionDetailsForQrCode(paymentId);
-        console.log(response);
         merchantId.value = response.data.merchantId;
         merchantName.value = response.data.merchantName;
         paymentAmount.value = response.data.amount;
@@ -42,8 +41,7 @@ export default {
 
       const qrRequest = createQrRequestBody();
       try {
-        const response = qrCodeService.validateQr(qrRequest);
-        console.log(response);
+        await qrCodeService.validateQr(qrRequest);
       } catch(err) {
         console.log(err)
         return;
@@ -51,7 +49,6 @@ export default {
 
       try {
         const response = await qrCodeService.generateQr(qrRequest);
-        console.log(response);
         qrCode.value = response.data.i;
       } catch(err) {
         console.log(`Error occurred while generating qr code for data: ${qrRequest}`);
@@ -61,7 +58,7 @@ export default {
     });
 
     const simulateScanning = () => {
-      // Create object and call appropriate api
+      // TODO Create object and call appropriate api
     }
 
     const createQrRequestBody = () => {
@@ -70,7 +67,7 @@ export default {
         V: "01",
         C: "1",
         R: merchantId.value,
-        N: `Payment for ${merchantName.value} on payment id: ${route.params.paymentId}`,
+        N: `Payment for ${merchantName.value} on payment id ${route.params.paymentId}`,
         I: `RSD${formatAmout()}`,
         SF: "129"
       };
