@@ -57,8 +57,24 @@ export default {
       }
     });
 
-    const simulateScanning = () => {
-      // TODO Create object and call appropriate api
+    const simulateScanning = async () => {
+      console.log("Simulating scanning and and sending request to acquirer bank..");
+
+      const paymentDto = {
+        pan: "1111111231",            
+        securityCode: "456",
+        cardHolderName: "Jovan Jovanovic",
+        expiryDate: "05/23",
+        merchantOrderId: route.params.merchantOrderId,
+        paymentId: route.params.paymentId
+      };
+
+      paymentService.payWithQrCode(paymentDto)
+        .then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.log(err);
+        });
     }
 
     const createQrRequestBody = () => {
@@ -77,7 +93,7 @@ export default {
       return paymentAmount.value.toFixed(2).toString().replace(".", ",");
     }
 
-    return { qrCode };
+    return { qrCode, simulateScanning };
   }
 };
 </script>

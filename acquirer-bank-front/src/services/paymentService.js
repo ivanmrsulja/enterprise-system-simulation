@@ -12,6 +12,14 @@ class PaymentService {
       `${import.meta.env.VITE_BASE_PATH}/transaction-details-qr/${paymentId}`
     );
   }
+
+  payWithQrCode(paymentDto) {
+    return axios.post(
+      `${import.meta.env.VITE_BASE_PATH}/transaction-details-qr/${paymentId}`,
+      paymentDto
+    );
+  }
+
 }
 
 export const paymentService = new PaymentService();
