@@ -80,7 +80,7 @@ export default {
       paymentService.payWithQrCode(paymentDto)
         .then(res => {
           console.log(res);
-          // window.location.href = res.data;
+          window.location.href = res.data;
         }).catch(err => {
           console.log(err);
         });
