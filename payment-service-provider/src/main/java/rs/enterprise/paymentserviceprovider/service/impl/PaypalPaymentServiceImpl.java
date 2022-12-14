@@ -4,6 +4,7 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 import rs.enterprise.paymentserviceprovider.model.enums.PaymentIntent;
 import rs.enterprise.paymentserviceprovider.model.enums.PaymentMethod;
@@ -16,8 +17,11 @@ import java.util.List;
 
 public class PaypalPaymentServiceImpl implements PaymentInterface {
 
-    @Autowired
-    private APIContext apiContext;
+    private static final APIContext context =
+            new APIContext("Aa0JWxXgo3_uoiXJ5xNwgeTzpcJGQDuB1rNFmLzyiKHu3gnKvucMuc7wVONNs6l63ryBfSebAoIq8kB9",
+                    "EHxH7KLmTajeiluF_DMYSZagceLfvjv3Ibgt_hCHnoT6u4gF4JxqZCvu5t7fa6JkNAP35E5YNDRjRd_x",
+                    "sandbox");;
+
 
     @Override
     public String getPaymentServiceName() {
@@ -56,7 +60,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         redirectUrls.setReturnUrl(customPayment.getSuccessUrl());
         payment.setRedirectUrls(redirectUrls);
 
-        Payment createdPayment = payment.create(apiContext);
+        Payment createdPayment = payment.create(context);
 
         for(Links links : createdPayment.getLinks())
             if (links.getRel().equals("approval_url"))
@@ -72,7 +76,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         PaymentExecution paymentExecution = new PaymentExecution();
         paymentExecution.setPayerId(payerId);
 
-        Payment executedPayment = payment.execute(apiContext, paymentExecution);
+        Payment executedPayment = payment.execute(context, paymentExecution);
 
         if (executedPayment.getState().equals("approved"))
             return "success";

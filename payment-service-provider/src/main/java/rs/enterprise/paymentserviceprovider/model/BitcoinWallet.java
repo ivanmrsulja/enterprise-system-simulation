@@ -21,32 +21,32 @@ public class BitcoinWallet {
     @Autowired
     private NetworkParameters networkParameters;
 
-    @PostConstruct
-    public void start() {
-        walletAppKit.startAsync();
-        walletAppKit.awaitRunning();
-
-        walletAppKit.wallet().addCoinsReceivedEventListener(
-                (wallet, tx, prevBalance, newBalance) -> {
-                    Coin value = tx.getValueSentToMe(wallet);
-                    System.out.println("Received coins " + value.toFriendlyString());
-                    Futures.addCallback(tx.getConfidence().getDepthFuture(1),
-                            new FutureCallback<TransactionConfidence>() {
-                                @Override
-                                public void onSuccess(TransactionConfidence result) {
-                                    System.out.println("Received coins " +
-                                            value.toFriendlyString() + " is confirmed. ");
-                                }
-
-                                @Override
-                                public void onFailure(Throwable t) {}
-                            }, MoreExecutors.directExecutor());
-                });
-
-        Address sendToAddress = LegacyAddress.fromKey(networkParameters,
-                walletAppKit.wallet().currentReceiveKey());
-        System.out.println("Send coins to: " + sendToAddress);
-    }
+//    @PostConstruct
+//    public void start() {
+//        walletAppKit.startAsync();
+//        walletAppKit.awaitRunning();
+//
+//        walletAppKit.wallet().addCoinsReceivedEventListener(
+//                (wallet, tx, prevBalance, newBalance) -> {
+//                    Coin value = tx.getValueSentToMe(wallet);
+//                    System.out.println("Received coins " + value.toFriendlyString());
+//                    Futures.addCallback(tx.getConfidence().getDepthFuture(1),
+//                            new FutureCallback<TransactionConfidence>() {
+//                                @Override
+//                                public void onSuccess(TransactionConfidence result) {
+//                                    System.out.println("Received coins " +
+//                                            value.toFriendlyString() + " is confirmed. ");
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Throwable t) {}
+//                            }, MoreExecutors.directExecutor());
+//                });
+//
+//        Address sendToAddress = LegacyAddress.fromKey(networkParameters,
+//                walletAppKit.wallet().currentReceiveKey());
+//        System.out.println("Send coins to: " + sendToAddress);
+//    }
 
     public void send(String value, String to) {
         try {

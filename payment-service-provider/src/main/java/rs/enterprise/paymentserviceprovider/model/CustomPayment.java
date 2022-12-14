@@ -18,7 +18,10 @@ public class CustomPayment {
 
     private LocalDate date;
 
+    private String paymentMethod;
+
     // Paypal
+    @Value("${paypal.currency}")
     private String currency;
 
     private String description;

@@ -1,6 +1,5 @@
 package rs.enterprise.paymentserviceprovider.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import rs.enterprise.paymentserviceprovider.model.BitcoinWallet;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 import rs.enterprise.paymentserviceprovider.service.PaymentInterface;
@@ -8,8 +7,7 @@ import rs.enterprise.paymentserviceprovider.service.PaymentInterface;
 
 public class BitcoinPaymentServiceImpl implements PaymentInterface {
 
-    @Autowired
-    private BitcoinWallet bitcoinWallet;
+    private static final BitcoinWallet bitcoinWallet = new BitcoinWallet();
 
     @Override
     public String getPaymentServiceName() {
@@ -20,7 +18,7 @@ public class BitcoinPaymentServiceImpl implements PaymentInterface {
     public String createPayment(CustomPayment customPayment) {
         bitcoinWallet.send(customPayment.getAmount().toString(),
                 customPayment.getToBusinessCompanyWallet());
-        return null;
+        return "success";
     }
 
     @Override
