@@ -14,8 +14,8 @@ class PaymentService {
   }
 
   payWithQrCode(paymentDto) {
-    return axios.post(
-      `${import.meta.env.VITE_BASE_PATH}/transaction-details-qr/${paymentId}`,
+    return axios.patch(
+      `${import.meta.env.VITE_BASE_PATH}/credit-card-payment`,
       paymentDto
     );
   }

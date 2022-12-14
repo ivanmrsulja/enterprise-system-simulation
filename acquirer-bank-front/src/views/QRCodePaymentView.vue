@@ -58,6 +58,14 @@ export default {
     });
 
     const simulateScanning = async () => {
+      /**
+       * When paying make sure that:
+       * @pan
+       * @securityCode
+       * @cardHolderName
+       * @expiryDate
+       * are all valid at table @bank_accounts
+       */
       console.log("Simulating scanning and and sending request to acquirer bank..");
 
       const paymentDto = {
@@ -72,6 +80,7 @@ export default {
       paymentService.payWithQrCode(paymentDto)
         .then(res => {
           console.log(res);
+          // window.location.href = res.data;
         }).catch(err => {
           console.log(err);
         });
