@@ -19,16 +19,16 @@ public class DbInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         candidateApplicationRepository.deleteAll();
-        CandidateApplication candidate1 = new CandidateApplication("Ivan", "Mrsulja", "BSC", new GeoPoint(45.25,19.81));
+        CandidateApplication candidate1 = new CandidateApplication("Ivan", "Mrsulja", "BSC", "aaaaa dolor sit amet", "bbbbb", new GeoPoint(45.25,19.81));
         candidateApplicationRepository.save(candidate1);
-        CandidateApplication candidate2 = new CandidateApplication("Milos", "Popovic", "PHD", new GeoPoint(45.25,19.81));
+        CandidateApplication candidate2 = new CandidateApplication("Milos", "Popovic", "PHD", "Lorem ipsum aaaaa", "bbbbb", new GeoPoint(45.25,19.81));
         candidateApplicationRepository.save(candidate2);
 //        CandidateApplication candidate3 = new CandidateApplication("Veljko", "Tosic", "MSC", new GeoPoint(45.25,19.81));
-        CandidateApplication candidate3 = new CandidateApplication("Veljko", "Tosic", "MSC", new GeoPoint(46.04, 14.51));
+        CandidateApplication candidate3 = new CandidateApplication("Veljko", "Tosic", "MSC", "aaaaa", "bbbbb", new GeoPoint(46.04, 14.51));
         candidateApplicationRepository.save(candidate3);
 
         Page<CandidateApplication> candidatesByName
                 = candidateApplicationRepository.findByNameOrSurnameOrEducation("Ivan", "Mrsulja", "MSC", PageRequest.of(0, 10));
-        System.out.println(candidatesByName.getTotalElements());
+//        System.out.println(candidatesByName.getTotalElements());
     }
 }

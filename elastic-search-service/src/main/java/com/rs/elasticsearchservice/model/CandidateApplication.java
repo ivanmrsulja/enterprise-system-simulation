@@ -31,14 +31,28 @@ public class CandidateApplication {
     @Field(type = FieldType.Text, store = true, name = "education")
     private String education;
 
+    @Field(type = FieldType.Text, store = true, name = "cv")
+    private String cv;
+
+    @Field(type = FieldType.Text, store = true, name = "letter")
+    private String letter;
+
+    @Field(type = FieldType.Text, store = true, name = "cvPath")
+    private String cvPath;
+
+    @Field(type = FieldType.Text, store = true, name = "letterPath")
+    private String letterPath;
+
     @GeoPointField
     @Field(store = true, name = "location")
     private GeoPoint location;
 
-    public CandidateApplication(String name, String surname, String education, GeoPoint location) {
+    public CandidateApplication(String name, String surname, String education, String cv, String letter, GeoPoint location) {
         this.name = name;
         this.surname = surname;
         this.education = education;
+        this.cv = cv;
+        this.letter = letter;
         this.location = location;
     }
 }

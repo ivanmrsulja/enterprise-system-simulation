@@ -32,12 +32,14 @@ public class ResultRetriever {
         var searchQuery = new NativeSearchQueryBuilder()
 				.withQuery(query)
 				.withHighlightFields(
-						new HighlightBuilder.Field("name").fragmentSize(200),
-						new HighlightBuilder.Field("surname").fragmentSize(200),
-						new HighlightBuilder.Field("education").fragmentSize(200))
+//						new HighlightBuilder.Field("name").fragmentSize(200),
+//						new HighlightBuilder.Field("surname").fragmentSize(200),
+//						new HighlightBuilder.Field("education").fragmentSize(200),
+						new HighlightBuilder.Field("cv").fragmentSize(200),
+						new HighlightBuilder.Field("letter").fragmentSize(200))
 				.build();
 
-		System.out.println(searchQuery.getQuery().toString());
+//		System.out.println(searchQuery.getQuery().toString());
         SearchHits<CandidateApplication> indexUnits = template.search(searchQuery, CandidateApplication.class, IndexCoordinates.of("applications"));
 
         for (var indexUnit : indexUnits.get().collect(Collectors.toList())) {
