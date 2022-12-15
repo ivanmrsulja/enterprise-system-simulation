@@ -15,6 +15,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/acquirer-bank/request-redirect", handler.RedirectHandler).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/acquirer-bank/authenticate", handler.AuthenticateMerchant).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/acquirer-bank/transaction-details/{paymentId}", handler.GetTransactionDetails).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/acquirer-bank/transaction-details-qr/{paymentId}", handler.GetTransactionDetailsForQrCode).Methods("GET", "OPTIONS")
 
 	log.Fatal(http.ListenAndServeTLS(":8082", "ssl/selfsigned.cer", "ssl/selfsigned.key", router))
 }

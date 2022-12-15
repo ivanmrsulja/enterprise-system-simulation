@@ -10,8 +10,13 @@ import (
 )
 
 func GenQrCode(w http.ResponseWriter, r *http.Request) {
-	var dataToCode dtos.DataToCode
 	w.Header().Set("Content-Type", "application/json")
+	util.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	var dataToCode dtos.DataToCode
 
 	err := json.NewDecoder(r.Body).Decode(&dataToCode)
 	dataToCodeStr := util.ConvertJsonToString(dataToCode)
@@ -41,8 +46,13 @@ func GenQrCode(w http.ResponseWriter, r *http.Request) {
 }
 
 func ValidateData(w http.ResponseWriter, r *http.Request) {
-	var dataToCode dtos.DataToCode
 	w.Header().Set("Content-Type", "application/json")
+	util.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	var dataToCode dtos.DataToCode
 
 	err := json.NewDecoder(r.Body).Decode(&dataToCode)
 	dataToCodeStr := util.ConvertJsonToString(dataToCode)

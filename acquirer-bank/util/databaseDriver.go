@@ -18,6 +18,20 @@ var (
 		{MerchantId: "j4komDDBwXVWoHg4ej6WMVqdD6U9qE", MerchantPassword: Bytes2StrRaw(Hash("j0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg")), MerchantName: "Monsters INC"},
 		{MerchantId: "k4komDDBwXVWoHg4ej6WMVqdD6U9qE", MerchantPassword: Bytes2StrRaw(Hash("k0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg")), MerchantName: "WebShop 2"},
 	}
+	transactions = []model.Transaction{
+		{
+			Model:      gorm.Model{},
+			PaymentId:  1000000001,
+			MerchantId: "j4komDDBwXVWoHg4ej6WMVqdD6U9qE",
+			Amount:     10150.25,
+		},
+		{
+			Model:      gorm.Model{},
+			PaymentId:  1000000002,
+			MerchantId: "j4komDDBwXVWoHg4ej6WMVqdD6U9qE",
+			Amount:     11250.50,
+		},
+	}
 )
 
 var Db *gorm.DB
@@ -47,5 +61,9 @@ func ConnectToDatabase() {
 
 	for _, account := range merchantAccounts {
 		Db.Create(&account)
+	}
+
+	for _, transaction := range transactions {
+		Db.Create(&transaction)
 	}
 }
