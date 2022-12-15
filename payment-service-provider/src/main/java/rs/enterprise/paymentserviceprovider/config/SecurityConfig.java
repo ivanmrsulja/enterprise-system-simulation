@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http = http.cors().and().csrf().disable();
+        http = http.csrf().disable();
 
         http = http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
 
@@ -56,9 +56,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 //api
-                .antMatchers(HttpMethod.POST, "/api/users/authenticate").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/authenticate/first-step").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/authenticate/second-step").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll()
-                .anyRequest().permitAll(); // OVO SAMO PRIVREMENO NEMOJ DA SE OBRUKAMO
+                .antMatchers(HttpMethod.GET, "/api/bank-payment/request-redirect-to-bank/{merchantOrderId}/{bankPaymentId}/{method}").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/bank-payment/request-redirect").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/bank-payment/final-redirect").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/payment-methods/{merchantId}/all").permitAll()
+                .anyRequest().fullyAuthenticated();
 
         //TODO: ovo vidi
         http.headers().xssProtection().and().contentSecurityPolicy("script-src 'self'");
@@ -72,6 +77,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 
 }

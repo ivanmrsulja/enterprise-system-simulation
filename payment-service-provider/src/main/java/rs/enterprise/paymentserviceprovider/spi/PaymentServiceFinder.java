@@ -9,8 +9,7 @@ import java.util.ServiceLoader;
 public class PaymentServiceFinder {
 
     public Iterator<PaymentServiceProvider> providers(boolean refresh) {
-        ServiceLoader<PaymentServiceProvider> loader = ServiceLoader
-                .load(PaymentServiceProvider.class);
+        ServiceLoader<PaymentServiceProvider> loader = ServiceLoader.load(PaymentServiceProvider.class);
         if (refresh) {
             loader.reload();
         }

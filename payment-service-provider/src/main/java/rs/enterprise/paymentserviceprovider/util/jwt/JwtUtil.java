@@ -79,6 +79,7 @@ public class JwtUtil {
                 .claim("jwt-security", jwtSecurityHash)
                 .claim("roles", user.getAuthority().getAuthority())
                 .claim("userId", user.getId())
+                .claim("companyName", user.getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenValidity))
                 .signWith(signatureAlgorithm, signingKey)

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 public class ErrorObject {
+
     public final String path;
     public final String message;
     public final LocalDateTime timestamp;
