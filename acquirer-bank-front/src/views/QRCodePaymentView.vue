@@ -92,9 +92,10 @@ export default {
         V: "01",
         C: "1",
         R: merchantId.value,
-        N: `Payment for ${merchantName.value} on payment id ${route.params.paymentId}`,
+        N: merchantName.value,
         I: `RSD${formatAmout()}`,
-        SF: "129"
+        SF: "129",
+        S: `Payment for ${merchantName.value} on payment id ${route.params.paymentId}`
       };
     }
 
