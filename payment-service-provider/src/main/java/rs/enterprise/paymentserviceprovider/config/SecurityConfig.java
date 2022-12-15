@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http = http.csrf().disable();
+        http = http.cors().and().csrf().disable();
 
         http = http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
 
@@ -63,6 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/bank-payment/request-redirect").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/bank-payment/final-redirect").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/payment-methods/{merchantId}/all").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/payments/pay").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/payments/success").permitAll()
                 .anyRequest().fullyAuthenticated();
 
         //TODO: ovo vidi

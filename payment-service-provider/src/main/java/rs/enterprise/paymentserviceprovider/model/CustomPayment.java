@@ -37,4 +37,18 @@ public class CustomPayment {
     @Value("${bitcoin.business-wallet}")
     private String toBusinessCompanyWallet;
 
+    @Override
+    public String toString() {
+        return "CustomPayment{" +
+                "amount=" + amount +
+                ", date=" + date +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", currency='" + currency + '\'' +
+                ", description='" + description + '\'' +
+                ", cancelUrl='" + cancelUrl + '\'' +
+                ", successUrl='" + successUrl + '\'' +
+                ", toBusinessCompanyEmail='" + toBusinessCompanyEmail + '\'' +
+                ", toBusinessCompanyWallet='" + toBusinessCompanyWallet + '\'' +
+                '}';
+    }
 }

@@ -60,6 +60,10 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         redirectUrls.setReturnUrl(customPayment.getSuccessUrl());
         payment.setRedirectUrls(redirectUrls);
 
+//        APIContext context =
+//                new APIContext("Aa0JWxXgo3_uoiXJ5xNwgeTzpcJGQDuB1rNFmLzyiKHu3gnKvucMuc7wVONNs6l63ryBfSebAoIq8kB9",
+//                        "EHxH7KLmTajeiluF_DMYSZagceLfvjv3Ibgt_hCHnoT6u4gF4JxqZCvu5t7fa6JkNAP35E5YNDRjRd_x",
+//                        "sandbox");;
         Payment createdPayment = payment.create(context);
 
         for(Links links : createdPayment.getLinks())

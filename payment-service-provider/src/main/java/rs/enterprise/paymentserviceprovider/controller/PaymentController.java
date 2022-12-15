@@ -30,7 +30,9 @@ public class PaymentController {
         String successUrl = URLBuilder.getBaseURL(request)  + PAYPAL_SUCCESS_URL;
         customPayment.setSuccessUrl(successUrl);
         customPayment.setCancelUrl(cancelUrl);
+        customPayment.setToBusinessCompanyEmail("sb-43hmsz22738278@business.example.com");
 
+        System.out.println(customPayment);
         AtomicReference<String> result = new AtomicReference<>("");
         paymentServiceFinder.providers(true).forEachRemaining(provider -> {
             PaymentInterface paymentMethod = provider.create();
