@@ -44,7 +44,7 @@ public class PaymentController {
                 }
             }
         });
-        return result.get();
+        return result.get().split("\\|")[1];
     }
 
     // posebna metoda neophodna za paypal i samo se izvrsava u slucaju paypal placanja
@@ -53,7 +53,7 @@ public class PaymentController {
         AtomicReference<String> result = new AtomicReference<>("");
         paymentServiceFinder.providers(true).forEachRemaining(provider -> {
             PaymentInterface paymentMethod = provider.create();
-            if (paymentMethod.getPaymentServiceName().equals("PayPal")) {
+            if (paymentMethod.getPaymentServiceName().equals("paypal")) {
                 try {
                     result.set(paymentMethod.executePayment(paymentId, payerId));
                 } catch (Exception e) {

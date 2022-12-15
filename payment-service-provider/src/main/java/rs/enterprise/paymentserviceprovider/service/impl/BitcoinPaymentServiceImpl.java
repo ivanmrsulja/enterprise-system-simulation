@@ -20,7 +20,7 @@ public class BitcoinPaymentServiceImpl implements PaymentInterface {
 
     @Override
     public String getPaymentServiceName() {
-        return "Bitcoin";
+        return "bitcoin";
     }
 
     @Override

@@ -84,7 +84,17 @@ export default {
           });
       } else {
         // TODO: Ovdje dodati da se genericki odradi placanje 3rd party servisom
-        console.log(methodUrlLabel);
+        console.log("assas" + methodUrlLabel);
+        let payment = {
+          amount: 100.0,
+          paymentMethod: methodUrlLabel,
+          currency: "USD",
+          description: "hallo"
+        }
+        paymentService.getPayment(payment).then((response) => {
+          console.log(response.data);
+          window.open(response.data);
+        });
       }
     };
 

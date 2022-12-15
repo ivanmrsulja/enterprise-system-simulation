@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/bank-payment/final-redirect").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/payment-methods/{merchantId}/all").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/payments/pay").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/payments/success").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/payments/*").permitAll()
                 .anyRequest().fullyAuthenticated();
 
         //TODO: ovo vidi

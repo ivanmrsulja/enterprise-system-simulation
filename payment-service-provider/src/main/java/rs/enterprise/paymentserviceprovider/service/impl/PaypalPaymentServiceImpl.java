@@ -25,7 +25,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
 
     @Override
     public String getPaymentServiceName() {
-        return "PayPal";
+        return "paypal";
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
 
         for(Links links : createdPayment.getLinks())
             if (links.getRel().equals("approval_url"))
-                return "success:" + links.getHref();
+                return "success|" + links.getHref();
 
         return "failed:/";
     }
@@ -83,7 +83,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         Payment executedPayment = payment.execute(context, paymentExecution);
 
         if (executedPayment.getState().equals("approved"))
-            return "success";
+            return "<h1>Successful Transaction.</h1>";
 
         return "failed";
     }
