@@ -20,6 +20,12 @@ class PaymentService {
     );
   }
 
+  payWithCard(paymentDto) {
+    return axios.patch(
+      `${import.meta.env.VITE_BASE_PATH}/credit-card-payment`,
+      paymentDto
+    );
+  }
 }
 
 export const paymentService = new PaymentService();
