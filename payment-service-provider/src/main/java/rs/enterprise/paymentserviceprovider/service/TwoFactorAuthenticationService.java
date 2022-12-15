@@ -7,10 +7,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.TwoFactorAuthenticationToken;
-import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
-import rs.enterprise.paymentserviceprovider.util.SecureStringGenerator;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.repository.TwoFactorAuthenticationTokenRepository;
+import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
+import rs.enterprise.paymentserviceprovider.util.SecureStringGenerator;
 
 @Service
 public class TwoFactorAuthenticationService {
