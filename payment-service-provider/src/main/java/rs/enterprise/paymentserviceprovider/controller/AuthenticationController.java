@@ -12,11 +12,12 @@ import rs.enterprise.paymentserviceprovider.annotation.Log;
 import rs.enterprise.paymentserviceprovider.clients.AcquirerBankClient;
 import rs.enterprise.paymentserviceprovider.dto.*;
 import rs.enterprise.paymentserviceprovider.exception.InvalidUsernameOrPasswordException;
-import rs.enterprise.paymentserviceprovider.util.jwt.JwtUtil;
 import rs.enterprise.paymentserviceprovider.service.MerchantService;
 import rs.enterprise.paymentserviceprovider.service.TwoFactorAuthenticationService;
+import rs.enterprise.paymentserviceprovider.util.jwt.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -47,7 +48,7 @@ public class AuthenticationController {
 
     @Log(message = "Authentication attempt.")
     @PostMapping("/authenticate/first-step")
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @Valid @RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
         var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getMerchantId(), authenticationRequestDTO.getMerchantPassword())
         );
@@ -60,7 +61,7 @@ public class AuthenticationController {
 
     @Log(message = "Authentication attempt 2FA.")
     @PostMapping("/authenticate/second-step")
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @RequestBody TwoFactorAuthenticationRequestDTO authRequest) throws Exception {
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @Valid @RequestBody TwoFactorAuthenticationRequestDTO authRequest) throws Exception {
         var token = twoFactorAuthenticationService.verifyToken(authRequest.getMerchantId(), authRequest.getPinCode());
         return new ResponseEntity<>(new AuthenticationResponseDTO(token), HttpStatus.OK);
     }
@@ -68,7 +69,7 @@ public class AuthenticationController {
     @Log(message = "Registration attempt.")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponseDTO register(HttpServletRequest request, @RequestBody RegisterDTO registrationRequest) {
+    public RegistrationResponseDTO register(HttpServletRequest request, @Valid @RequestBody RegisterDTO registrationRequest) {
         if (!acquirerBankClient.authenticateMerchant(apiKey, new AcquirerBankMerchantAuthenticationDTO(registrationRequest.getMerchantId(), registrationRequest.getMerchantPassword()))) {
             throw new InvalidUsernameOrPasswordException("Username and password that you have provided do not match.");
         }

@@ -13,6 +13,7 @@ import rs.enterprise.paymentserviceprovider.service.BankPaymentService;
 
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/bank-payment")
@@ -42,7 +43,7 @@ public class CreditCardPaymentController {
 
     @Log(message = "Requested redirect to PSP.")
     @PostMapping("/request-redirect") // ovo privremeno dok se ne cujemo kako izgleda API za PayPal i BTC pa da napravimo nesto genericko :)
-    public PSPRedirectResponseDTO requestRedirect(HttpServletRequest request, @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
+    public PSPRedirectResponseDTO requestRedirect(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
         return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
     }
 

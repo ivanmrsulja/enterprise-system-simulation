@@ -57,8 +57,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //api
                 .antMatchers(HttpMethod.POST, "/api/users/authenticate/first-step").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/authenticate/second-step").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll()
-                .anyRequest().permitAll(); // OVO SAMO PRIVREMENO NEMOJ DA SE OBRUKAMO
+                .antMatchers(HttpMethod.GET, "/api/bank-payment/request-redirect-to-bank/{merchantOrderId}/{bankPaymentId}/{method}").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/bank-payment/request-redirect").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/bank-payment/final-redirect").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/payment-methods/{merchantId}/all").permitAll()
+                .anyRequest().fullyAuthenticated();
 
         //TODO: ovo vidi
         http.headers().xssProtection().and().contentSecurityPolicy("script-src 'self'");
