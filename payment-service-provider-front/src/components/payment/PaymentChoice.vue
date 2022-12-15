@@ -21,6 +21,7 @@
           <img
             width="100"
             height="100"
+            style="object-fit: cover"
             :src="
               '/src/assets/images/' + paymentMethod.replace(' ', '') + '.png'
             "
