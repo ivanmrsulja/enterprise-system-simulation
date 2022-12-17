@@ -23,7 +23,7 @@ public class DbInitializer implements ApplicationRunner {
         candidateApplicationRepository.save(candidate1);
         CandidateApplication candidate2 = new CandidateApplication("Milos", "Popovic", "PHD", "Lorem ipsum aaaaa", "bbbbb", new GeoPoint(45.25,19.81));
         candidateApplicationRepository.save(candidate2);
-//        CandidateApplication candidate3 = new CandidateApplication("Veljko", "Tosic", "MSC", new GeoPoint(45.25,19.81));
+//        CandidateApplication candidate3 = new CandidateApplication("Veljko", "Tosic", "MSC", "aaaaa", "bbbbb", new GeoPoint(45.25,19.81));
         CandidateApplication candidate3 = new CandidateApplication("Veljko", "Tosic", "MSC", "aaaaa", "bbbbb", new GeoPoint(46.04, 14.51));
         candidateApplicationRepository.save(candidate3);
 
