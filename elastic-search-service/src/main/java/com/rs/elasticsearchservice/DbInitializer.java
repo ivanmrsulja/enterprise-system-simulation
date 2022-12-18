@@ -28,7 +28,7 @@ public class DbInitializer implements ApplicationRunner {
         candidateApplicationRepository.save(candidate3);
 
         Page<CandidateApplication> candidatesByName
-                = candidateApplicationRepository.findByNameOrSurnameOrEducation("Ivan", "Mrsulja", "MSC", PageRequest.of(0, 10));
+                = candidateApplicationRepository.findByNameOrSurnameOrEducation("Ivan", "Mrsulja", "MSC", "", "",PageRequest.of(0, 10));
 //        System.out.println(candidatesByName.getTotalElements());
     }
 }

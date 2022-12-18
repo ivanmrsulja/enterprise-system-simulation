@@ -15,6 +15,8 @@ public interface CandidateApplicationRepository extends ElasticsearchRepository<
             "{\"field\" : {\"name\" : \"?\"}}, " +
             "{\"field\" : {\"surname\" : \"?\"}}, " +
             "{\"field\" : {\"education\" : \"?\"}} " +
+            "{\"field\" : {\"cv\" : \"?\"}} " +
+            "{\"field\" : {\"letter\" : \"?\"}} " +
             "]}}")
-    Page<CandidateApplication> findByNameOrSurnameOrEducation(String name, String surname, String education, Pageable pageable);
+    Page<CandidateApplication> findByNameOrSurnameOrEducation(String name, String surname, String education, String cv, String letter, Pageable pageable);
 }

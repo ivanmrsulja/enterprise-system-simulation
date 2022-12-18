@@ -14,4 +14,8 @@ import java.util.List;
 public class AdvancedQuery {
 
     private List<String> expression;
+
+    private String cityName;
+
+    private Double radius;
 }
