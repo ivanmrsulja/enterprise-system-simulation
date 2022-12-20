@@ -17,5 +17,5 @@ public class AdvancedQuery {
 
     private String cityName;
 
-    private Double radius;
+    private Double distance;
 }

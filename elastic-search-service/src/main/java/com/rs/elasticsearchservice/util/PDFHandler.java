@@ -19,8 +19,11 @@ public class PDFHandler {
 
     private final String DATA_DIR_PATH = "src/main/resources/data";
 
-    public CandidateApplication getWithIndexedDocuments(String cvPath, String letterPath) throws IOException {
+    public CandidateApplication getWithIndexedDocuments(String cvFileName, String letterFileName) throws IOException {
         CandidateApplication retVal = new CandidateApplication();
+
+        String cvPath = Paths.get(DATA_DIR_PATH + File.separator + cvFileName).toString();
+        String letterPath = Paths.get(DATA_DIR_PATH + File.separator + letterFileName).toString();
 
         File cv = new File(cvPath);
         File letter = new File(letterPath);
@@ -28,12 +31,12 @@ public class PDFHandler {
         PDFParser parserCV = new PDFParser(new RandomAccessFile(cv, "r"));
         parserCV.parse();
         retVal.setCv(getText(parserCV));
-        retVal.setCvPath(cvPath);
+        retVal.setCvPath(cvFileName);
 
         PDFParser parserLetter = new PDFParser(new RandomAccessFile(letter, "r"));
         parserLetter.parse();
         retVal.setLetter(getText(parserLetter));
-        retVal.setLetterPath(letterPath);
+        retVal.setLetterPath(letterFileName);
 
         return retVal;
     }
@@ -44,13 +47,13 @@ public class PDFHandler {
     }
 
     public String saveUploadedFile(MultipartFile file) throws IOException {
-        String retVal = null;
+        String fileName = null;
         if (! file.isEmpty()) {
+            fileName = UUID.randomUUID() + ".pdf";
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(DATA_DIR_PATH + File.separator + UUID.randomUUID());
+            Path path = Paths.get(DATA_DIR_PATH + File.separator + fileName);
             Files.write(path, bytes);
-            retVal = path.toString();
         }
-        return retVal;
+        return fileName;
     }
 }

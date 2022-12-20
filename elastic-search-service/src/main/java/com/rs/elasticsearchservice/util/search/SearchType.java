@@ -1,4 +1,4 @@
-package com.rs.elasticsearchservice.config.search;
+package com.rs.elasticsearchservice.util.search;
 
 public enum SearchType {
 	
