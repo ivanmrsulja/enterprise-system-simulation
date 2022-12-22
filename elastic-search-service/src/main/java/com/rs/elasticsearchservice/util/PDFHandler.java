@@ -56,4 +56,8 @@ public class PDFHandler {
         }
         return fileName;
     }
+
+    public File getFileForDownload(String filename) {
+        return new File(Paths.get(DATA_DIR_PATH + File.separator + filename).toString());
+    }
 }
