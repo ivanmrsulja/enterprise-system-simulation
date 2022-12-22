@@ -1,8 +1,5 @@
 package rs.enterprise.paymentserviceprovider.service.impl;
 
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-import rs.enterprise.paymentserviceprovider.model.BitcoinWallet;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 import rs.enterprise.paymentserviceprovider.service.PaymentInterface;
 

@@ -3,8 +3,6 @@ package rs.enterprise.paymentserviceprovider.service.impl;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 import rs.enterprise.paymentserviceprovider.model.enums.PaymentIntent;
 import rs.enterprise.paymentserviceprovider.model.enums.PaymentMethod;
