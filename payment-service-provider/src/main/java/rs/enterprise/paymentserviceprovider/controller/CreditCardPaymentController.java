@@ -1,7 +1,11 @@
 package rs.enterprise.paymentserviceprovider.controller;
 
+import feign.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.enterprise.paymentserviceprovider.annotation.Log;
 import rs.enterprise.paymentserviceprovider.clients.AcquirerBankClient;
@@ -13,7 +17,9 @@ import rs.enterprise.paymentserviceprovider.service.BankPaymentService;
 
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/bank-payment")
@@ -42,9 +48,13 @@ public class CreditCardPaymentController {
     }
 
     @Log(message = "Requested redirect to PSP.")
-    @PostMapping("/request-redirect") // ovo privremeno dok se ne cujemo kako izgleda API za PayPal i BTC pa da napravimo nesto genericko :)
-    public PSPRedirectResponseDTO requestRedirect(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
-        return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
+    @PostMapping("/request-redirect")
+    public ResponseEntity<Void> requestRedirect(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
+//        return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
+//        response.sendRedirect(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest)))
+                .build();
     }
 
     @Log(message = "Requested redirect to result page.")
