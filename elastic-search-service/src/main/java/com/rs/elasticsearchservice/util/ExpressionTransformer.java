@@ -1,8 +1,8 @@
 package com.rs.elasticsearchservice.util;
 
-import com.rs.elasticsearchservice.config.search.CustomQueryBuilder;
-import com.rs.elasticsearchservice.config.search.SearchType;
 import com.rs.elasticsearchservice.model.RequiredHighlights;
+import com.rs.elasticsearchservice.util.search.CustomQueryBuilder;
+import com.rs.elasticsearchservice.util.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.stereotype.Component;

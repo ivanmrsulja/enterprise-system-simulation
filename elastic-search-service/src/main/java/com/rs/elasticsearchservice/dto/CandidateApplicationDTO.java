@@ -1,6 +1,5 @@
 package com.rs.elasticsearchservice.dto;
 
-import com.rs.elasticsearchservice.model.CandidateApplication;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,15 @@ import java.util.Map;
 @AllArgsConstructor
 public class CandidateApplicationDTO {
 
-    private CandidateApplication candidateApplication;
+    private String name;
+
+    private String surname;
+
+    private String education;
+
+    private String cvPath;
+
+    private String letterPath;
 
     private Map<String, List<String>> highlights;
 }

@@ -42,7 +42,7 @@ public class DbInitialiser implements ApplicationRunner {
                             passwordEncoder.encode("j0n1KCQZmvFKogkY5OyE30hHfe9DWSxi2JQ4A47PoBnMWSJ6jUfpCHNywtJVIJYNdFYD3kK8ZE6NlZuQNXPbcZriPdIgxuW6ijrg"),
                             "mqelI4wskvNhTX0GVyz3W0PUxVf8xBSXREtP3pG9xhyznZ4lht7CYMsdVrmSWkoGbv6uYBTEANsHCxmPqslIUh5TD2vSLkKPOB37HA3Nk9LblMJzaAqpfFxKhGQgRrQ2",
                             "Monsters INC", "mrsuljaivancic@gmail.com", authority1);
-        user1.setPaymentMethods(new HashSet<>(List.of(new String[]{"Credit Card", "PayPal", "Bitcoin"})));
+        user1.setPaymentMethods(new HashSet<>(List.of(new String[]{"Credit Card", "paypal", "bitcoin"})));
         merchantRepository.save(user1);
     }
 }
