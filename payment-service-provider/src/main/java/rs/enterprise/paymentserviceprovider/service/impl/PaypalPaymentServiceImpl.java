@@ -68,7 +68,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
 
         for(Links links : createdPayment.getLinks())
             if (links.getRel().equals("approval_url"))
-                return "success|" + links.getHref();
+                return  links.getHref();
 
         return "failed:/";
     }

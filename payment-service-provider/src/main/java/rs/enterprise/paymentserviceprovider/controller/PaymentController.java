@@ -44,7 +44,7 @@ public class PaymentController {
                 }
             }
         });
-        return result.get().split("\\|")[1];
+        return result.get();
     }
 
     // posebna metoda neophodna za paypal i samo se izvrsava u slucaju paypal placanja

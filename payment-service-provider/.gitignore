@@ -38,3 +38,7 @@ build/
 /src/main/resources/*.pem
 /src/main/resources/static/
 /src/main/resources/keyStore
+
+### BITCOIN ###
+/src/main/resources/my-wallet-service-testnet.spvchain
+/src/main/resources/my-wallet-service-testnet.wallet

@@ -36,10 +36,10 @@ public class ErrorHandler {
         return new ErrorObject(request, ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseBody
-    ErrorObject handlePSQLException(HttpServletRequest request, RuntimeException ex) {
-        return new ErrorObject(request, ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(RuntimeException.class)
+//    @ResponseBody
+//    ErrorObject handlePSQLException(HttpServletRequest request, RuntimeException ex) {
+//        return new ErrorObject(request, ex.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
 }
