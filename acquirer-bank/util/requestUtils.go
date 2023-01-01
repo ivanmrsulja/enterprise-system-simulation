@@ -33,7 +33,7 @@ var BasePCCRedirectPathRoundRobin, _ = roundrobin.New(
 )
 
 var BasePSPRedirectPathRoundRobin, _ = roundrobin.New(
-	&url.URL{Host: "https://localhost:8081/api/bank-payment/final-redirect"},
+	&url.URL{Host: "https://localhost:8089/api/bank-payment/final-redirect"},
 )
 
 func DelegateResponse(response *http.Response, w http.ResponseWriter) {
