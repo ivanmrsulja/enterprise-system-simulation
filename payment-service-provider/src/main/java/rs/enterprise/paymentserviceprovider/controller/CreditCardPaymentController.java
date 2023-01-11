@@ -47,7 +47,11 @@ public class CreditCardPaymentController {
     @Log(message = "Requested dummy payment.")
     @PostMapping("/dummy-payment")
     public DummyResponseDTO dummyPayment(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
-        return new DummyResponseDTO("Payment Successfull!");
+        var success = bankPaymentService.checkTransactionStatus(paymentRequest.getMerchantOrderId());
+        if(success) {
+            return new DummyResponseDTO("Payment Successfull!");
+        }
+        return new DummyResponseDTO("Payment Unsuccessfull!");
     }
 
     @Log(message = "Requested redirect to result page.")

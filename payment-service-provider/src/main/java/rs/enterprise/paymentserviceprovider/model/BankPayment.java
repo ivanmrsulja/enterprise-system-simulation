@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.enterprise.paymentserviceprovider.model.enums.TransactionState;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,4 +41,7 @@ public class BankPayment extends BaseEntity {
 
     @Column(name = "error_url")
     private String errorUrl;
+
+    @Column(name = "state", nullable = true)
+    private TransactionState state;
 }

@@ -33,7 +33,8 @@ public class BankPaymentService {
                         paymentRequest.getAmount(),
                         paymentRequest.getSuccessUrl(),
                         paymentRequest.getFailedUrl(),
-                        paymentRequest.getErrorUrl()));
+                        paymentRequest.getErrorUrl(),
+                        null));
 
         return "http://127.0.0.1:5173/make-payment/" + savedPayment.getMerchantOrderId() + "/" + savedPayment.getId() + "/" + savedPayment.getMerchantId();
     }
@@ -59,16 +60,33 @@ public class BankPaymentService {
         switch(state) {
             case SUCCESS:
                 redirectUrl += bankPayment.getSuccessUrl();
+                bankPayment.setState(TransactionState.SUCCESS);
                 // Ovdje treba neki async call da se BPM obavijesti da je prosla uplata
                 break;
             case ERROR:
                 redirectUrl += bankPayment.getErrorUrl();
+                bankPayment.setState(TransactionState.ERROR);
                 break;
             case FAILED:
                 redirectUrl += bankPayment.getFailedUrl();
+                bankPayment.setState(TransactionState.FAILED);
                 break;
         }
-        bankPaymentRepository.delete(bankPayment);
+
+        bankPaymentRepository.save(bankPayment);
         return redirectUrl;
+    }
+
+    public boolean checkTransactionStatus(Long merchantOrderId) {
+        boolean isSuccess = false;
+        var bankPayment = bankPaymentRepository.getByMerchantOrderId(merchantOrderId)
+                .orElseThrow(() -> new NotFoundException("No such bank payment with given credentials."));
+
+        if(bankPayment.getState() == TransactionState.SUCCESS) {
+            isSuccess = true;
+        }
+
+        bankPaymentRepository.delete(bankPayment);
+        return isSuccess;
     }
 }

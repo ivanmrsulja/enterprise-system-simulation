@@ -61,7 +61,7 @@ public class BankPaymentServiceTest {
                 123L,
                 "timestamp",
                 200.00,
-                "url1", "url2", "url3");
+                "url1", "url2", "url3", null);
 
         doReturn(Optional.of(payment)).when(bankPaymentRepository).getByIdAndMerchantOrderId(1, 1L);
 
@@ -89,7 +89,7 @@ public class BankPaymentServiceTest {
                 123L,
                 "timestamp",
                 200.00,
-                "success", "failed", "error");
+                "success", "failed", "error", null);
 
         doReturn(Optional.of(payment)).when(bankPaymentRepository).getByMerchantOrderId(1L);
 
@@ -107,7 +107,7 @@ public class BankPaymentServiceTest {
                 123L,
                 "timestamp",
                 200.00,
-                "success", "failed", "error");
+                "success", "failed", "error", null);
 
         doReturn(Optional.of(payment)).when(bankPaymentRepository).getByMerchantOrderId(1L);
 
@@ -126,7 +126,7 @@ public class BankPaymentServiceTest {
                 123L,
                 "timestamp",
                 200.00,
-                "success", "failed", "error");
+                "success", "failed", "error", null);
 
         doReturn(Optional.of(payment)).when(bankPaymentRepository).getByMerchantOrderId(1L);
 
