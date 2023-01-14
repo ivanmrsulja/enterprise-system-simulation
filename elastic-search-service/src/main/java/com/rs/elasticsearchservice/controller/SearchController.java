@@ -34,7 +34,7 @@ public class SearchController {
     @PostMapping(value="/boolean", consumes="application/json")
     public ResponseEntity<List<CandidateApplicationDTO>> searchBoolean(HttpServletRequest request, @RequestBody AdvancedQuery advancedQuery){
 
-        LOG.info(request.getRemoteAddr() + "-Candidate-Company");
+        LOG.info("STATISTIC-LOG " + request.getRemoteAddr() + "-Candidate-Company");
 
         var results = resultRetrieverService.getResults(advancedQuery);
         return new ResponseEntity<>(results, HttpStatus.OK);
