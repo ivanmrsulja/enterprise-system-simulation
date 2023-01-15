@@ -1,21 +1,22 @@
 package com.rs.elasticsearchservice.controller;
 
 import com.rs.elasticsearchservice.dto.CandidateApplicationIndexDTO;
+import com.rs.elasticsearchservice.dto.StatisticLogDTO;
 import com.rs.elasticsearchservice.service.IndexingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/index")
 public class IndexController {
 
     private final IndexingService indexingService;
+
+    private static final Logger LOG = Logger.getLogger(SearchController.class.getName());
 
     @Autowired
     public IndexController(IndexingService indexingService) {
@@ -26,5 +27,11 @@ public class IndexController {
     @ResponseStatus(HttpStatus.CREATED)
     public void index(CandidateApplicationIndexDTO indexingUnit) throws IOException {
         indexingService.indexApplication(indexingUnit);
+    }
+
+    @PostMapping("/statistic-log")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createStatisticLog(@RequestBody StatisticLogDTO statisticLog) {
+        LOG.info("STATISTIC-LOG " + statisticLog.getCity() + "-" + statisticLog.getUser() + "-" + statisticLog.getCompany());
     }
 }
