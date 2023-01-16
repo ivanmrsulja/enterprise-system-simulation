@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DummyResponseDTO {
+public class PaymentCheckResponseDTO {
     private String result;
 }

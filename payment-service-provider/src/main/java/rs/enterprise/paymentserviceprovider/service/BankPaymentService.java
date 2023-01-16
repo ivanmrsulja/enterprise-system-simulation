@@ -84,9 +84,9 @@ public class BankPaymentService {
 
         if(bankPayment.getState() == TransactionState.SUCCESS) {
             isSuccess = true;
+            bankPaymentRepository.delete(bankPayment);
         }
 
-        bankPaymentRepository.delete(bankPayment);
         return isSuccess;
     }
 }

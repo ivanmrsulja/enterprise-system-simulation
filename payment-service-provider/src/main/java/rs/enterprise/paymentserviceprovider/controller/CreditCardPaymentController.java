@@ -44,14 +44,14 @@ public class CreditCardPaymentController {
         return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
     }
 
-    @Log(message = "Requested dummy payment.")
-    @PostMapping("/dummy-payment")
-    public DummyResponseDTO dummyPayment(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
+    @Log(message = "Requested payment check.")
+    @PostMapping("/check-payment")
+    public PaymentCheckResponseDTO checkPayment(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) {
         var success = bankPaymentService.checkTransactionStatus(paymentRequest.getMerchantOrderId());
         if(success) {
-            return new DummyResponseDTO("Payment Successfull!");
+            return new PaymentCheckResponseDTO("Payment Successful!");
         }
-        return new DummyResponseDTO("Payment Unsuccessfull!");
+        return new PaymentCheckResponseDTO("Payment Unsuccessful!");
     }
 
     @Log(message = "Requested redirect to result page.")
