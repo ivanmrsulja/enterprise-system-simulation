@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.GET, "/", "/js/**", "/css/**", "/favicon.ico");
+        web.ignoring().antMatchers(HttpMethod.GET, "/", "/js/**", "/css/**", "/favicon.ico", "/swagger-ui/index.html");
     }
 
     @Override
@@ -66,6 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/payments/pay").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/payments/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/bank-payment/check-payment").permitAll()
+                .antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                 .anyRequest().fullyAuthenticated();
 
         //TODO: ovo vidi

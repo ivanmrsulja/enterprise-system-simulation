@@ -1,5 +1,6 @@
 package rs.enterprise.paymentserviceprovider.controller;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,7 @@ public class AuthenticationController {
     }
 
     @Log(message = "Authentication attempt.")
+    @OpenAPIDefinition()
     @PostMapping("/authenticate/first-step")
     public ResponseEntity<AuthenticationResponseDTO> authenticate(HttpServletRequest request, @Valid @RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
         var authentication = authenticationManager.authenticate(
