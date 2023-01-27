@@ -41,6 +41,9 @@ public class Merchant extends BaseEntity implements UserDetails {
     @JoinColumn(name = "authority_id")
     private Authority authority;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<BusinessAccount> accounts;
+
     public Merchant(String merchantId, String merchantPassword, String apiKey, String name, String email, Authority authority) {
         this.merchantId = merchantId;
         this.merchantPassword = merchantPassword;

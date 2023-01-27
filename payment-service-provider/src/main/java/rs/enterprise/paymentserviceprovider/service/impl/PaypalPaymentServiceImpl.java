@@ -83,6 +83,9 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         if (executedPayment.getState().equals("approved"))
             return "<h1>Successful Transaction.</h1>";
 
+//        http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-failed/
+//        http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-successful/
+
         return "failed";
     }
 

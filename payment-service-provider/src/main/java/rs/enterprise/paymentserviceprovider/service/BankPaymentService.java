@@ -11,6 +11,8 @@ import rs.enterprise.paymentserviceprovider.repository.BankPaymentRepository;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
 
+import javax.transaction.Transactional;
+
 @Service
 public class BankPaymentService {
 
@@ -101,5 +103,13 @@ public class BankPaymentService {
         }
 
         return isSuccess;
+    }
+
+    @Transactional
+    public void setTransactionState(Long merchantOrderId, TransactionState state) {
+        var bankPayment = bankPaymentRepository.getByMerchantOrderId(merchantOrderId)
+                .orElseThrow(() -> new NotFoundException("No such bank payment with given credentials."));
+        bankPayment.setState(state);
+        bankPaymentRepository.save(bankPayment);
     }
 }
