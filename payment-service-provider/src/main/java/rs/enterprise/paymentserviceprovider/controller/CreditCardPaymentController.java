@@ -40,8 +40,8 @@ public class CreditCardPaymentController {
 
     @Log(message = "Requested redirect to PSP.")
     @PostMapping("/request-redirect")
-    public PSPRedirectResponseDTO requestRedirect(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
-        return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest));
+    public PSPRedirectResponseDTO requestRedirect(HttpServletRequest request, @Valid @RequestBody AcquirerBankPaymentRequestDTO paymentRequest, @RequestHeader("X-Auth-Token") String authToken) throws Exception {
+        return new PSPRedirectResponseDTO(bankPaymentService.createNewPaymentAndGenerateRedirectUrl(paymentRequest, authToken));
     }
 
     @Log(message = "Requested payment check.")

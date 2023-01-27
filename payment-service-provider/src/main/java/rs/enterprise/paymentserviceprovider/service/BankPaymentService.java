@@ -3,10 +3,12 @@ package rs.enterprise.paymentserviceprovider.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.enterprise.paymentserviceprovider.dto.AcquirerBankPaymentRequestDTO;
+import rs.enterprise.paymentserviceprovider.exception.InvalidUsernameOrPasswordException;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.BankPayment;
 import rs.enterprise.paymentserviceprovider.model.enums.TransactionState;
 import rs.enterprise.paymentserviceprovider.repository.BankPaymentRepository;
+import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
 
 @Service
@@ -14,16 +16,27 @@ public class BankPaymentService {
 
     private final BankPaymentRepository bankPaymentRepository;
 
+    private final MerchantRepository merchantRepository;
+
     private final EncryptionUtil encryptionUtil;
 
     @Autowired
     public BankPaymentService(BankPaymentRepository bankPaymentRepository,
+                              MerchantRepository merchantRepository,
                               EncryptionUtil encryptionUtil) {
         this.bankPaymentRepository = bankPaymentRepository;
+        this.merchantRepository = merchantRepository;
         this.encryptionUtil = encryptionUtil;
     }
 
-    public String createNewPaymentAndGenerateRedirectUrl(AcquirerBankPaymentRequestDTO paymentRequest) throws Exception {
+    public String createNewPaymentAndGenerateRedirectUrl(AcquirerBankPaymentRequestDTO paymentRequest, String authToken) throws Exception {
+        var merchant = merchantRepository.findByMerchantId(paymentRequest.getMerchantId())
+                .orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
+
+        if(!merchant.getApiKey().equals(authToken)) {
+            throw new InvalidUsernameOrPasswordException("Bad API key");
+        }
+
         var savedPayment = bankPaymentRepository.save(
                 new BankPayment(
                         paymentRequest.getMerchantId(),

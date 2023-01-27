@@ -7,8 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import rs.enterprise.paymentserviceprovider.dto.AcquirerBankPaymentRequestDTO;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
 import rs.enterprise.paymentserviceprovider.model.BankPayment;
+import rs.enterprise.paymentserviceprovider.model.Merchant;
 import rs.enterprise.paymentserviceprovider.model.enums.TransactionState;
 import rs.enterprise.paymentserviceprovider.repository.BankPaymentRepository;
+import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.service.BankPaymentService;
 import rs.enterprise.paymentserviceprovider.util.EncryptionUtil;
 
@@ -24,6 +26,9 @@ public class BankPaymentServiceTest {
     private BankPaymentRepository bankPaymentRepository;
 
     @Mock
+    private MerchantRepository merchantRepository;
+
+    @Mock
     private EncryptionUtil encryptionUtil;
 
     @InjectMocks
@@ -32,6 +37,8 @@ public class BankPaymentServiceTest {
     @Test
     void createNewPaymentAndGenerateRedirectUrl_calledWithValidParams_isSuccess() throws Exception {
         // GIVEN
+        var merchant = new Merchant();
+        merchant.setApiKey("aaaaa");
         var paymentRequest = new AcquirerBankPaymentRequestDTO("id",
                 "password",
                 200.0,
@@ -43,10 +50,11 @@ public class BankPaymentServiceTest {
         payment.setMerchantOrderId(123L);
         payment.setId(1);
         doReturn(payment).when(bankPaymentRepository).save(any());
+        doReturn(Optional.of(merchant)).when(merchantRepository).findByMerchantId(any());
         doReturn("aaa").when(encryptionUtil).encrypt(any());
 
         // WHEN
-        var url = service.createNewPaymentAndGenerateRedirectUrl(paymentRequest);
+        var url = service.createNewPaymentAndGenerateRedirectUrl(paymentRequest, "aaaaa");
 
         // THEN
         verify(bankPaymentRepository, times(1)).save(any());
