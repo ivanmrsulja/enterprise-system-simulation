@@ -87,14 +87,17 @@ export default {
         // TODO: Ovdje dodati da se genericki odradi placanje 3rd party servisom
         console.log("assas" + methodUrlLabel);
         let payment = {
-          amount: 100.0,
           paymentMethod: methodUrlLabel,
           currency: "USD",
-          description: "hallo"
-        }
+          description: "hallo",
+          merchantOrderId: route.params.merchantOrderId,
+          transactionId: route.params.transactionId,
+        };
         paymentService.getPayment(payment).then((response) => {
           console.log(response.data);
-          window.open(response.data);
+          if (methodUrlLabel === "paypal") {
+            window.open(response.data);
+          }
         });
       }
     };

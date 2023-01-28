@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import rs.enterprise.paymentserviceprovider.annotation.Log;
+import rs.enterprise.paymentserviceprovider.dto.BusinessAccountDTO;
 import rs.enterprise.paymentserviceprovider.dto.SetPaymentMethodsRequestDTO;
 import rs.enterprise.paymentserviceprovider.service.PaymentMethodService;
 
@@ -39,4 +40,11 @@ public class PaymentMethodController {
     public void setPaymentMethodsForMerchant(HttpServletRequest request, @RequestBody SetPaymentMethodsRequestDTO requestDTO) {
         paymentMethodService.setPaymentMethodsForMerchant(requestDTO.getId(), requestDTO.getPaymentMethods());
     }
+
+    @Log(message = "Setting new business account for merchant.")
+    @PostMapping("/setBusinessAccount")
+    public void setBusinessAccountForMerchant(HttpServletRequest request, @RequestBody BusinessAccountDTO businessAccountDTO) {
+        paymentMethodService.setBusinessAccountForMerchant(businessAccountDTO);
+    }
+
 }

@@ -58,4 +58,9 @@ public class MerchantService implements UserDetailsService {
         return merchantRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
     }
+
+    public Merchant findMerchantByMerchantId(String merchantId) {
+        return merchantRepository.findByMerchantId(merchantId).
+                orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
+    }
 }

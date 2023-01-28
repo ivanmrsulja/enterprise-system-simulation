@@ -20,8 +20,10 @@ public class CustomPayment {
 
     private String paymentMethod;
 
-    // Paypal
-    @Value("${paypal.currency}")
+    private Long merchantOrderId;
+
+    private Integer transactionId;
+
     private String currency;
 
     private String description;
@@ -30,12 +32,7 @@ public class CustomPayment {
 
     private String successUrl;
 
-    @Value("${paypal.business-email}")
-    private String toBusinessCompanyEmail;
-
-    // Bitcoin
-    @Value("${bitcoin.business-wallet}")
-    private String toBusinessCompanyWallet;
+    private String account;
 
     @Override
     public String toString() {
@@ -43,12 +40,13 @@ public class CustomPayment {
                 "amount=" + amount +
                 ", date=" + date +
                 ", paymentMethod='" + paymentMethod + '\'' +
+                ", merchantOrderId=" + merchantOrderId +
+                ", transactionId=" + transactionId +
                 ", currency='" + currency + '\'' +
                 ", description='" + description + '\'' +
                 ", cancelUrl='" + cancelUrl + '\'' +
                 ", successUrl='" + successUrl + '\'' +
-                ", toBusinessCompanyEmail='" + toBusinessCompanyEmail + '\'' +
-                ", toBusinessCompanyWallet='" + toBusinessCompanyWallet + '\'' +
+                ", account='" + account + '\'' +
                 '}';
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import rs.enterprise.paymentserviceprovider.model.Authority;
+import rs.enterprise.paymentserviceprovider.model.BusinessAccount;
 import rs.enterprise.paymentserviceprovider.model.Merchant;
 import rs.enterprise.paymentserviceprovider.repository.AuthorityRepository;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
@@ -43,6 +44,9 @@ public class DbInitialiser implements ApplicationRunner {
                             "mqelI4wskvNhTX0GVyz3W0PUxVf8xBSXREtP3pG9xhyznZ4lht7CYMsdVrmSWkoGbv6uYBTEANsHCxmPqslIUh5TD2vSLkKPOB37HA3Nk9LblMJzaAqpfFxKhGQgRrQ2",
                             "Monsters INC", "mrsuljaivancic@gmail.com", authority1);
         user1.setPaymentMethods(new HashSet<>(List.of(new String[]{"Credit Card", "QR Code", "paypal", "bitcoin"})));
+        user1.setAccounts(new HashSet<>(List.of(new BusinessAccount("paypal",
+                "sb-43hmsz22738278@business.example.com"), new BusinessAccount("bitcoin",
+                "mohjSavDdQYHRYXcS3uS6ttaHP8amyvX78"))));
         merchantRepository.save(user1);
     }
 }

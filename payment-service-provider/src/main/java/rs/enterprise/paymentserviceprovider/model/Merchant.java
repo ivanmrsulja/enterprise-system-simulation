@@ -41,7 +41,7 @@ public class Merchant extends BaseEntity implements UserDetails {
     @JoinColumn(name = "authority_id")
     private Authority authority;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BusinessAccount> accounts;
 
     public Merchant(String merchantId, String merchantPassword, String apiKey, String name, String email, Authority authority) {

@@ -8,14 +8,12 @@ import rs.enterprise.paymentserviceprovider.service.PaymentInterface;
 
 
 public class BitcoinPaymentServiceImpl implements PaymentInterface {
-    private BitcoinWallet bitcoinWallet;
+    private final BitcoinWallet bitcoinWallet;
 
     public BitcoinPaymentServiceImpl() {
         ApplicationContext context = StaticApplicationContext.getContext();
         assert context != null;
-        System.out.println(context);
         this.bitcoinWallet = context.getBean(BitcoinWallet.class);
-        System.out.println(this.bitcoinWallet);
     }
 
     @Override
@@ -25,9 +23,9 @@ public class BitcoinPaymentServiceImpl implements PaymentInterface {
 
     @Override
     public String createPayment(CustomPayment customPayment) {
-        String businessCompanyWallet = "mohjSavDdQYHRYXcS3uS6ttaHP8amyvX78";
-        this.bitcoinWallet.send(customPayment.getAmount().toString(),
-                businessCompanyWallet);
+        // ZAKUCANA VRIJEDNOST ZA BITCOIN TRANSAKCIJU
+        this.bitcoinWallet.send("0.00001",
+                customPayment.getAccount());
         return "success";
     }
 

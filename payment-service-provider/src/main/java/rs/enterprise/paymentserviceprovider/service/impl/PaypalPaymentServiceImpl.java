@@ -20,7 +20,6 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
                     "EHxH7KLmTajeiluF_DMYSZagceLfvjv3Ibgt_hCHnoT6u4gF4JxqZCvu5t7fa6JkNAP35E5YNDRjRd_x",
                     "sandbox");;
 
-
     @Override
     public String getPaymentServiceName() {
         return "paypal";
@@ -39,7 +38,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         transaction.setAmount(amount);
 
         Payee payee = new Payee();
-        payee.setEmail(customPayment.getToBusinessCompanyEmail());
+        payee.setEmail(customPayment.getAccount());
         transaction.setPayee(payee);
 
         List<Transaction> transactions = new ArrayList<>();
@@ -58,10 +57,6 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         redirectUrls.setReturnUrl(customPayment.getSuccessUrl());
         payment.setRedirectUrls(redirectUrls);
 
-//        APIContext context =
-//                new APIContext("Aa0JWxXgo3_uoiXJ5xNwgeTzpcJGQDuB1rNFmLzyiKHu3gnKvucMuc7wVONNs6l63ryBfSebAoIq8kB9",
-//                        "EHxH7KLmTajeiluF_DMYSZagceLfvjv3Ibgt_hCHnoT6u4gF4JxqZCvu5t7fa6JkNAP35E5YNDRjRd_x",
-//                        "sandbox");;
         Payment createdPayment = payment.create(context);
 
         for(Links links : createdPayment.getLinks())
@@ -80,13 +75,25 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
 
         Payment executedPayment = payment.execute(context, paymentExecution);
 
+        String url = "http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-failed/";
+
         if (executedPayment.getState().equals("approved"))
-            return "<h1>Successful Transaction.</h1>";
+            url = "http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-successful/";
 
-//        http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-failed/
-//        http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-successful/
-
-        return "failed";
+        return String.format("<html>\n" +
+                "\n" +
+                "<head>\n" +
+                "    <title>Successful Transacition</title>\n" +
+                "    <meta charset=\"UTF-8\" />\n" +
+                "    <meta http-equiv=\"refresh\" content=\"0.1; URL=%s\" />\n" +
+                "</head>\n" +
+                "\n" +
+                "<body>\n" +
+                "    <p>This page has been moved. If you are not redirected within 3 seconds, click <a\n" +
+                "            href=\"%s\">here</a> to go to the Bonita homepage.</p>\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>", url, url);
     }
 
 }
