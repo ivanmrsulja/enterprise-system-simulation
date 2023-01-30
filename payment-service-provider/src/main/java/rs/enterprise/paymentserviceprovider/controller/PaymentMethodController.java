@@ -42,9 +42,16 @@ public class PaymentMethodController {
     }
 
     @Log(message = "Setting new business account for merchant.")
-    @PostMapping("/setBusinessAccount")
+    @PostMapping("/business-account")
+    @ResponseStatus(HttpStatus.CREATED)
     public void setBusinessAccountForMerchant(HttpServletRequest request, @RequestBody BusinessAccountDTO businessAccountDTO) {
         paymentMethodService.setBusinessAccountForMerchant(businessAccountDTO);
+    }
+
+    @Log(message = "Getting business account for merchant.")
+    @GetMapping("/business-account/{merchantId}/{paymentMethod}")
+    public String getBusinessAccountForMerchant(HttpServletRequest request, @PathVariable String merchantId, @PathVariable String paymentMethod) {
+        return paymentMethodService.getBusinessAccountForMerchant(merchantId, paymentMethod);
     }
 
 }
