@@ -16,24 +16,41 @@
       elevation="5"
     >
       <v-list-item three-line>
-        <div class="text-overline mb-4">{{ paymentMethod }}</div>
+        <div class="text-overline mb-4">{{ paymentMethod.name }}</div>
         <v-avatar
           tile
           size="80"
           :color="
-            merchantPaymentMethods.includes(paymentMethod) ? '#04aa6d' : 'grey'
+            merchantPaymentMethods.includes(paymentMethod.name)
+              ? '#04aa6d'
+              : 'grey'
           "
           style="float: right"
         ></v-avatar>
         <v-list-item-title class="text-h5 mb-1">
-          {{ paymentMethod }}
+          {{ paymentMethod.name }}
         </v-list-item-title>
 
         <v-list-item-subtitle>{{
-          merchantPaymentMethods.includes(paymentMethod)
+          merchantPaymentMethods.includes(paymentMethod.name)
             ? "This payment method is successfully integrated in your application."
             : "Click 'Add' to integrate this payment method in your application"
         }}</v-list-item-subtitle>
+        <div
+          v-if="
+            paymentMethod.name !== 'Credit Card' &&
+            paymentMethod.name !== 'QR Code'
+          "
+        >
+          <br />
+          <v-text-field
+            :readonly="
+              merchantPaymentMethods.includes(paymentMethod.name) ? true : false
+            "
+            v-model="paymentMethod.details"
+            label="Account details"
+          ></v-text-field>
+        </div>
       </v-list-item>
 
       <v-card-actions>
@@ -42,17 +59,19 @@
           rounded
           text
           :color="
-            merchantPaymentMethods.includes(paymentMethod) ? 'error' : '#04aa6d'
+            merchantPaymentMethods.includes(paymentMethod.name)
+              ? 'error'
+              : '#04aa6d'
           "
           @click="
             updatePaymentMethods(
               paymentMethod,
-              merchantPaymentMethods.includes(paymentMethod) ? true : false
+              merchantPaymentMethods.includes(paymentMethod.name) ? true : false
             )
           "
         >
           {{
-            merchantPaymentMethods.includes(paymentMethod)
+            merchantPaymentMethods.includes(paymentMethod.name)
               ? "Remove from application"
               : "Add"
           }}
@@ -79,6 +98,25 @@ export default {
 
     onMounted(() => {
       paymentMethodService.getAllPaymentMethods().then((response) => {
+        let counter = 0;
+        for (let methodName of response.data) {
+          response.data[counter] = {
+            name: methodName,
+            details: "",
+          };
+          paymentMethodService
+            .getAccountDetails(decodedToken.sub, methodName)
+            .then((response) => {
+              let counter = 0;
+              for (let method of allPaymentMethods.value) {
+                if (method.name == methodName) {
+                  allPaymentMethods.value[counter].details = response.data;
+                }
+                counter++;
+              }
+            });
+          counter++;
+        }
         allPaymentMethods.value = response.data;
       });
 
@@ -93,11 +131,17 @@ export default {
       if (remove) {
         merchantPaymentMethods.value = merchantPaymentMethods.value.filter(
           (el) => {
-            return el !== paymentMethod;
+            return el !== paymentMethod.name;
           }
         );
       } else {
-        merchantPaymentMethods.value.push(paymentMethod);
+        let accountPayload = {
+          account: paymentMethod.details,
+          merchantId: decodedToken.sub,
+          paymentMethod: paymentMethod.name,
+        };
+        paymentMethodService.addAccountDetails(accountPayload);
+        merchantPaymentMethods.value.push(paymentMethod.name);
       }
       let payload = {
         id: decodedToken.userId,

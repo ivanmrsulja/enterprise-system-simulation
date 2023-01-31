@@ -17,6 +17,21 @@ class PaymentMethodService {
       payload
     );
   }
+
+  addAccountDetails(payload) {
+    return axios.post(
+      `${import.meta.env.VITE_BASE_PATH}/payment-methods/business-account`,
+      payload
+    );
+  }
+
+  getAccountDetails(merchantId, paymentMethod) {
+    return axios.get(
+      `${
+        import.meta.env.VITE_BASE_PATH
+      }/payment-methods/business-account/${merchantId}/${paymentMethod}`
+    );
+  }
 }
 
 export const paymentMethodService = new PaymentMethodService();

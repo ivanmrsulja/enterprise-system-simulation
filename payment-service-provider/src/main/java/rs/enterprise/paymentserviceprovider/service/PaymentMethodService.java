@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.enterprise.paymentserviceprovider.dto.BusinessAccountDTO;
 import rs.enterprise.paymentserviceprovider.exception.NotFoundException;
-import rs.enterprise.paymentserviceprovider.model.BusinessAccount;
 import rs.enterprise.paymentserviceprovider.repository.MerchantRepository;
 import rs.enterprise.paymentserviceprovider.spi.PaymentServiceFinder;
 
@@ -54,8 +53,26 @@ public class PaymentMethodService {
     public void setBusinessAccountForMerchant(BusinessAccountDTO businessAccountDTO)  {
         var merchant =  merchantRepository.findByMerchantId(businessAccountDTO.getMerchantId())
                .orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
-        merchant.getAccounts().add(new BusinessAccount(businessAccountDTO.getPaymentMethod(), businessAccountDTO.getAccount()));
+
+        for(var account : merchant.getAccounts()) {
+            if (account.getPaymentMethod().equals(businessAccountDTO.getPaymentMethod())) {
+                account.setAccount(businessAccountDTO.getAccount());
+            }
+        }
 
         merchantRepository.save(merchant);
+    }
+
+    public String getBusinessAccountForMerchant(String merchantId, String paymentMethod)  {
+        var merchant =  merchantRepository.findByMerchantId(merchantId)
+                .orElseThrow(() -> new NotFoundException("Merchant with given ID does not exist."));
+
+        for(var account : merchant.getAccounts()) {
+            if (account.getPaymentMethod().equals(paymentMethod)) {
+                return account.getAccount();
+            }
+        }
+
+        return "";
     }
 }
