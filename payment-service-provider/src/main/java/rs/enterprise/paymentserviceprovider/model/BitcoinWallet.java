@@ -9,7 +9,9 @@ import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import rs.enterprise.paymentserviceprovider.service.BitcoinHashService;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -21,6 +23,9 @@ public class BitcoinWallet {
     private final WalletAppKit walletAppKit;
 
     private final NetworkParameters networkParameters;
+
+    @Autowired
+    private BitcoinHashService bitcoinHashService;
 
     public BitcoinWallet() {
         BriefLogFormatter.init();
@@ -69,9 +74,11 @@ public class BitcoinWallet {
             SendRequest sendRequest = SendRequest.to(toAddress, Coin.parseCoin(value));
             sendRequest.feePerKb = Coin.parseCoin("0.00005");
             Wallet.SendResult sendResult = walletAppKit.wallet().sendCoins(walletAppKit.peerGroup(), sendRequest);
-            sendResult.broadcastComplete.addListener(() ->
-                            System.out.println("Transaction hash is " + sendResult.tx.getTxId()),
-                    MoreExecutors.directExecutor());
+            sendResult.broadcastComplete.addListener(() -> {
+                        bitcoinHashService.setTransactionHash(sendRequest.tx.getTxId().toString());
+                        System.out.println("Transaction hash is " + bitcoinHashService.getTransactionHash());
+                    }
+                    ,MoreExecutors.directExecutor());
         } catch (InsufficientMoneyException e) {
             throw  new RuntimeException(e);
         }

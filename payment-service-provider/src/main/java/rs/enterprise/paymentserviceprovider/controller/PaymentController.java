@@ -7,6 +7,7 @@ import rs.enterprise.paymentserviceprovider.model.BusinessAccount;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 import rs.enterprise.paymentserviceprovider.model.Merchant;
 import rs.enterprise.paymentserviceprovider.service.BankPaymentService;
+import rs.enterprise.paymentserviceprovider.service.BitcoinHashService;
 import rs.enterprise.paymentserviceprovider.service.MerchantService;
 import rs.enterprise.paymentserviceprovider.service.PaymentInterface;
 import rs.enterprise.paymentserviceprovider.spi.PaymentServiceFinder;
@@ -26,6 +27,9 @@ public class PaymentController {
 
     @Autowired
     private MerchantService merchantService;
+
+    @Autowired
+    private BitcoinHashService bitcoinHashService;
 
     public static final String PAYPAL_SUCCESS_URL = "/api/payments/success";
     public static final String PAYPAL_CANCEL_URL = "/api/payments/cancel";
@@ -86,5 +90,15 @@ public class PaymentController {
             }
         });
         return result.get();
+    }
+
+    @GetMapping(value = "/getBitcoinHash")
+    public String getBitcoinHash() {
+        String result = bitcoinHashService.getTransactionHash();
+        System.out.println("Checkout transaction hash: " + result);
+        if (!result.equals("")) {
+            bitcoinHashService.setTransactionHash("");
+        }
+        return result;
     }
 }

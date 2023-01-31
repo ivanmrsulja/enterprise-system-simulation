@@ -85,7 +85,6 @@ export default {
           });
       } else {
         // TODO: Ovdje dodati da se genericki odradi placanje 3rd party servisom
-        console.log("assas" + methodUrlLabel);
         let payment = {
           paymentMethod: methodUrlLabel,
           currency: "USD",
@@ -97,6 +96,23 @@ export default {
           console.log(response.data);
           if (methodUrlLabel === "paypal") {
             window.open(response.data);
+          } else if (methodUrlLabel === "bitcoin") {
+            var intervalId = null;
+            var varName = function () {
+              paymentService.getBitcoinHash().then((response) => {
+                let result = response.data;
+                console.log("checkout transaction hash result: " + result);
+                if (result) {
+                  clearInterval(intervalId);
+                  alert("Transaction hash is : " + result);
+                  window.open(
+                    "http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-successful/"
+                  );
+                }
+              });
+            };
+
+            intervalId = setInterval(varName, 60000);
           }
         });
       }
