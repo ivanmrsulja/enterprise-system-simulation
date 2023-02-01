@@ -167,12 +167,10 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         paymentDefinition.setType("REGULAR");
         paymentDefinition.setFrequency("MONTH");
         paymentDefinition.setFrequencyInterval("1");
-        //paymentDefinition.setCycles("12");
         paymentDefinition.setCycles(String.valueOf(numberOfMonths));
 
         Currency currency = new Currency();
         currency.setCurrency("USD");
-        //currency.setValue("10");
         currency.setValue(String.format("%.2f",amount / numberOfMonths).replace(',','.'));
         paymentDefinition.setAmount(currency);
 
@@ -195,12 +193,8 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         merchantPreferences.setAutoBillAmount("YES");
         merchantPreferences.setInitialFailAmountAction("CONTINUE");
         plan.setMerchantPreferences(merchantPreferences);
-//        plan.setState("ACTIVE");
         plan = plan.create(context);
 
-//        plan.setState("ACTIVE");  //Change state of created plan to 'ACTIVE'
-//        plan.update(context, new ArrayList<>());
-//
         List<Patch> patchRequestList = new ArrayList<>();
         Map<String, String> value = new HashMap<>();
         value.put("state", "ACTIVE");
