@@ -9,7 +9,7 @@ import rs.enterprise.paymentserviceprovider.dto.AcquirerBankMerchantAuthenticati
 import rs.enterprise.paymentserviceprovider.dto.AcquirerBankPaymentRequestDTO;
 import rs.enterprise.paymentserviceprovider.dto.BankRedirectResponseDTO;
 
-@FeignClient(value = "acquirerBankClient", url = "https://localhost:8082/api/acquirer-bank", configuration = CustomFeignConfig.class)
+@FeignClient(value = "acquirerBankClient", url = "https://www.sep-banka.com:8082/api/acquirer-bank", configuration = CustomFeignConfig.class)
 public interface AcquirerBankClient {
 
     @PostMapping(value = "/authenticate")

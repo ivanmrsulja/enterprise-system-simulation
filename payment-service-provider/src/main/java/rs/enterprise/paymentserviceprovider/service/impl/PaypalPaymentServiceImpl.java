@@ -173,7 +173,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         Currency currency = new Currency();
         currency.setCurrency("USD");
         //currency.setValue("10");
-        currency.setValue(String.format("%.2f",amount / numberOfMonths));
+        currency.setValue(String.format("%.2f",amount / numberOfMonths).replace(',','.'));
         paymentDefinition.setAmount(currency);
 
         ChargeModels chargeModels = new ChargeModels();
