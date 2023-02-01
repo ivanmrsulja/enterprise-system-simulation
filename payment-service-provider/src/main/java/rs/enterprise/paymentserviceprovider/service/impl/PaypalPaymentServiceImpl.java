@@ -195,15 +195,18 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         merchantPreferences.setAutoBillAmount("YES");
         merchantPreferences.setInitialFailAmountAction("CONTINUE");
         plan.setMerchantPreferences(merchantPreferences);
-
+//        plan.setState("ACTIVE");
         plan = plan.create(context);
 
+//        plan.setState("ACTIVE");  //Change state of created plan to 'ACTIVE'
+//        plan.update(context, new ArrayList<>());
+//
         List<Patch> patchRequestList = new ArrayList<>();
         Map<String, String> value = new HashMap<>();
         value.put("state", "ACTIVE");
 
         Patch patch = new Patch();
-        patch.setPath("/");
+        patch.setPath("");
         patch.setValue(value);
         patch.setOp("replace");
         patchRequestList.add(patch);
