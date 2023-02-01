@@ -33,6 +33,8 @@ public class CustomPayment {
 
     private String account;
 
+    private Integer numberOfMonths;
+
     @Override
     public String toString() {
         return "CustomPayment{" +
@@ -46,6 +48,7 @@ public class CustomPayment {
                 ", cancelUrl='" + cancelUrl + '\'' +
                 ", successUrl='" + successUrl + '\'' +
                 ", account='" + account + '\'' +
+                ", numberOfMonths=" + numberOfMonths +
                 '}';
     }
 }

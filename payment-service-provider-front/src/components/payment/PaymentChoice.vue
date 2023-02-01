@@ -49,6 +49,7 @@
       </v-card-actions>
     </v-card>
   </v-container>
+  <button @click="makeSubscription">Subscribe test</button>
 </template>
 
 <script>
@@ -70,6 +71,20 @@ export default {
           merchantPaymentMethods.value = response.data;
         });
     });
+
+    const makeSubscription = () => {
+      let payment = {
+        paymentMethod: "paypal",
+        currency: "USD",
+        description: "hallo",
+        merchantOrderId: route.params.merchantOrderId,
+        transactionId: route.params.transactionId,
+        numberOfMonths: 12,
+      };
+      paymentService.getSubscription(payment).then((response) => {
+        window.open(response.data);
+      });
+    };
 
     const makePayment = (method) => {
       let methodUrlLabel = method.replace(" ", "-").toLowerCase();
@@ -118,7 +133,7 @@ export default {
       }
     };
 
-    return { merchantPaymentMethods, makePayment };
+    return { merchantPaymentMethods, makePayment, makeSubscription };
   },
 };
 </script>

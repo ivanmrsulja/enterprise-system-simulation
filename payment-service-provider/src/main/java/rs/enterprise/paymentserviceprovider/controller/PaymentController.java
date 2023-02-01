@@ -34,6 +34,9 @@ public class PaymentController {
     public static final String PAYPAL_SUCCESS_URL = "/api/payments/success";
     public static final String PAYPAL_CANCEL_URL = "/api/payments/cancel";
 
+    public static final String PAYPAL_SUCCESS_SUBSCRIPTION = "/api/payments/confirm-subscription";
+    public static final String PAYPAL_CANCEL_SUBSCRIPTION = "/api/payments/cancel-subscription";
+
     @Autowired
     public PaymentController(PaymentServiceFinder paymentServiceFinder) {
         this.paymentServiceFinder = paymentServiceFinder;
@@ -100,5 +103,47 @@ public class PaymentController {
             bitcoinHashService.setTransactionHash("");
         }
         return result;
+    }
+
+    @PostMapping(value = "/subscription")
+    public String subscription(HttpServletRequest request, @RequestBody CustomPayment customPayment) throws Exception {
+        String cancelUrl = URLBuilder.getBaseURL(request)  + PAYPAL_CANCEL_SUBSCRIPTION;
+        String successUrl = URLBuilder.getBaseURL(request)  + PAYPAL_SUCCESS_SUBSCRIPTION;
+        customPayment.setSuccessUrl(successUrl);
+        customPayment.setCancelUrl(cancelUrl);
+
+        AcquirerBankPaymentRequestDTO temp = bankPaymentService.fetchBankPaymentRequest(customPayment.getMerchantOrderId(),
+                customPayment.getTransactionId());
+        customPayment.setAmount(temp.getAmount());
+        System.out.println(customPayment);
+
+        AtomicReference<String> result = new AtomicReference<>("");
+        paymentServiceFinder.providers(true).forEachRemaining(provider -> {
+            PaymentInterface paymentMethod = provider.create();
+            if (paymentMethod.getPaymentServiceName().equals("paypal")) {
+                try {
+                    result.set(paymentMethod.createSubscription(customPayment));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return result.get();
+    }
+
+    @GetMapping(value = "/confirm-subscription")
+    public String successSubscription(@RequestParam("token") String token) {
+        AtomicReference<String> result = new AtomicReference<>("");
+        paymentServiceFinder.providers(true).forEachRemaining(provider -> {
+            PaymentInterface paymentMethod = provider.create();
+            if (paymentMethod.getPaymentServiceName().equals("paypal")) {
+                try {
+                    result.set(paymentMethod.executeSubscription(token));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return result.get();
     }
 }

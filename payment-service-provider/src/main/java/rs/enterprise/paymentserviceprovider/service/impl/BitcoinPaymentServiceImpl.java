@@ -34,4 +34,14 @@ public class BitcoinPaymentServiceImpl implements PaymentInterface {
         return null;
     }
 
+    @Override
+    public String createSubscription(CustomPayment customPayment) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String executeSubscription(String token) throws Exception {
+        return null;
+    }
+
 }

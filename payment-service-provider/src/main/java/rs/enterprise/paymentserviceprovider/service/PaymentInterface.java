@@ -1,5 +1,6 @@
 package rs.enterprise.paymentserviceprovider.service;
 
+
 import org.springframework.stereotype.Component;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 
@@ -12,4 +13,8 @@ public interface PaymentInterface {
     String createPayment(CustomPayment customPayment) throws Exception;
 
     String executePayment(String paymentId, String payerId) throws Exception;
+
+    String createSubscription(CustomPayment customPayment) throws  Exception;
+
+    String executeSubscription(String token) throws Exception;
 }

@@ -1,6 +1,7 @@
 package rs.enterprise.paymentserviceprovider.service.impl;
 
 import com.paypal.api.payments.*;
+import com.paypal.api.payments.Currency;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
@@ -10,8 +11,8 @@ import rs.enterprise.paymentserviceprovider.service.PaymentInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class PaypalPaymentServiceImpl implements PaymentInterface {
 
@@ -48,6 +49,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         payer.setPaymentMethod(PaymentMethod.paypal.toString());
 
         Payment payment = new Payment();
+
         payment.setIntent(PaymentIntent.sale.toString());
         payment.setPayer(payer);
 
@@ -96,4 +98,117 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
                 "</html>", url, url);
     }
 
+    @Override
+    public String createSubscription(CustomPayment customPayment) throws Exception {
+        Date startDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+        String formattedStartDate = sdf.format(startDate);
+
+        Payer payer = new Payer();
+        payer.setPaymentMethod(PaymentMethod.paypal.toString());
+
+        Agreement agreement = new Agreement();
+        Plan plan = createPlan(customPayment.getCancelUrl(), customPayment.getSuccessUrl(),
+                customPayment.getAmount(), customPayment.getNumberOfMonths());
+
+        Plan newPlan = new Plan();
+        newPlan.setId(plan.getId());
+        context.setMaskRequestId(true);
+
+        agreement.setName("Premium shop payment");
+        agreement.setStartDate(formattedStartDate);
+        agreement.setPayer(payer);
+        agreement.setDescription("sdadas");
+        agreement.setPlan(newPlan);
+        agreement = agreement.create(context);
+
+        for(Links links : agreement.getLinks())
+            if (links.getRel().equals("approval_url"))
+                return  links.getHref();
+
+        return "failed:/";
+    }
+
+    @Override
+    public String executeSubscription(String token) throws Exception {
+        Agreement agreement = Agreement.execute(context, token);
+        String url = "http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-failed/";
+
+        if (agreement.getState().equals("Active"))
+            url = "http://www.bonita-sajt.com:8080/bonita/apps/userAppBonita/transaction-successful/";
+
+        return String.format("<html>\n" +
+                "\n" +
+                "<head>\n" +
+                "    <title>Successful Subscription</title>\n" +
+                "    <meta charset=\"UTF-8\" />\n" +
+                "    <meta http-equiv=\"refresh\" content=\"0.1; URL=%s\" />\n" +
+                "</head>\n" +
+                "\n" +
+                "<body>\n" +
+                "    <p>This page has been moved. If you are not redirected within 3 seconds, click <a\n" +
+                "            href=\"%s\">here</a> to go to the Bonita homepage.</p>\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>", url, url);
+    }
+
+    private Plan createPlan(String cancelUrl, String returnUrl,
+                            Double amount, Integer numberOfMonths) throws PayPalRESTException {
+        Plan plan = new Plan();
+
+        plan.setName("Basic Plan");
+        plan.setDescription("Basic plan");
+        plan.setType("fixed");
+
+        PaymentDefinition paymentDefinition = new PaymentDefinition();
+        paymentDefinition.setName("Regular Payments");
+        paymentDefinition.setType("REGULAR");
+        paymentDefinition.setFrequency("MONTH");
+        paymentDefinition.setFrequencyInterval("1");
+        //paymentDefinition.setCycles("12");
+        paymentDefinition.setCycles(String.valueOf(numberOfMonths));
+
+        Currency currency = new Currency();
+        currency.setCurrency("USD");
+        //currency.setValue("10");
+        currency.setValue(String.format("%.2f",amount / numberOfMonths));
+        paymentDefinition.setAmount(currency);
+
+        ChargeModels chargeModels = new ChargeModels();
+        chargeModels.setType("TAX");
+        chargeModels.setAmount(new Currency().setCurrency("USD").setValue("0"));
+        List<ChargeModels> chargeModelsList = new ArrayList<>();
+        chargeModelsList.add(chargeModels);
+        paymentDefinition.setChargeModels(chargeModelsList);
+
+        List<PaymentDefinition> paymentDefinitionList = new ArrayList<>();
+        paymentDefinitionList.add(paymentDefinition);
+        plan.setPaymentDefinitions(paymentDefinitionList);
+
+        MerchantPreferences merchantPreferences = new MerchantPreferences();
+        merchantPreferences.setSetupFee(currency);
+        merchantPreferences.setCancelUrl(cancelUrl);
+        merchantPreferences.setReturnUrl(returnUrl);
+        merchantPreferences.setMaxFailAttempts("0");
+        merchantPreferences.setAutoBillAmount("YES");
+        merchantPreferences.setInitialFailAmountAction("CONTINUE");
+        plan.setMerchantPreferences(merchantPreferences);
+
+        plan = plan.create(context);
+
+        List<Patch> patchRequestList = new ArrayList<>();
+        Map<String, String> value = new HashMap<>();
+        value.put("state", "ACTIVE");
+
+        Patch patch = new Patch();
+        patch.setPath("/");
+        patch.setValue(value);
+        patch.setOp("replace");
+        patchRequestList.add(patch);
+
+        plan.update(context, patchRequestList);
+        return plan;
+    }
 }

@@ -18,6 +18,12 @@ class PaymentService {
       `${import.meta.env.VITE_BASE_PATH}/payments/getBitcoinHash`
     );
   }
+  getSubscription(customPayment) {
+    return axios.post(
+      `${import.meta.env.VITE_BASE_PATH}/payments/subscription`,
+      customPayment
+    );
+  }
 }
 
 export const paymentService = new PaymentService();
