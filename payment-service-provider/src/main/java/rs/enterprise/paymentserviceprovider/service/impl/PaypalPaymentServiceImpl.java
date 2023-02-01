@@ -206,7 +206,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         value.put("state", "ACTIVE");
 
         Patch patch = new Patch();
-        patch.setPath("");
+        patch.setPath("/");
         patch.setValue(value);
         patch.setOp("replace");
         patchRequestList.add(patch);

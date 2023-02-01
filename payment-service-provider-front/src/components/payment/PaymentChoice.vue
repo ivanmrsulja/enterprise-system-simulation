@@ -38,6 +38,11 @@
       </v-list-item>
 
       <v-card-actions>
+        <v-text-field
+          v-if="paymentMethod === 'bitcoin'"
+          label="Wallet"
+          v-model="wallet"
+        ></v-text-field>
         <v-btn
           outlined
           rounded
@@ -74,6 +79,7 @@ export default {
   setup() {
     const merchantPaymentMethods = ref([]);
     const monthsInInstallment = ref(1);
+    const wallet = ref("");
     const route = useRoute();
 
     onMounted(() => {
@@ -111,6 +117,10 @@ export default {
             window.open(response.data.paymentUrl, "_blank");
           });
       } else {
+        if(methodUrlLabel === "bitcoin" && (wallet.value === "" || wallet.value.includes(" "))) {
+          setTimeout(() => {alert("Bad wallet format");}, 1000);
+          return;
+        }
         let payment = {
           paymentMethod: methodUrlLabel,
           currency: "USD",
@@ -152,6 +162,7 @@ export default {
       makePayment,
       makeSubscription,
       monthsInInstallment,
+      wallet
     };
   },
 };
