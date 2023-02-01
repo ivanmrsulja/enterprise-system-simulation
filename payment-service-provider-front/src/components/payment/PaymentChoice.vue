@@ -46,10 +46,21 @@
           @click="makePayment(paymentMethod)"
           >Pay</v-btn
         >
+        <v-btn v-if="paymentMethod === 'paypal'" @click="makeSubscription"
+          >Pay in installment</v-btn
+        >
+        <v-text-field
+          v-if="paymentMethod === 'paypal'"
+          v-model="monthsInInstallment"
+          type="number"
+          min="1"
+          max="12"
+          label="Select number of months"
+          style="max-width: 200px"
+        ></v-text-field>
       </v-card-actions>
     </v-card>
   </v-container>
-  <button @click="makeSubscription">Subscribe test</button>
 </template>
 
 <script>
@@ -62,6 +73,7 @@ export default {
   name: "PaymentChoice",
   setup() {
     const merchantPaymentMethods = ref([]);
+    const monthsInInstallment = ref(1);
     const route = useRoute();
 
     onMounted(() => {
@@ -79,7 +91,7 @@ export default {
         description: "hallo",
         merchantOrderId: route.params.merchantOrderId,
         transactionId: route.params.transactionId,
-        numberOfMonths: 12,
+        numberOfMonths: monthsInInstallment.value,
       };
       paymentService.getSubscription(payment).then((response) => {
         window.open(response.data);
@@ -99,7 +111,6 @@ export default {
             window.open(response.data.paymentUrl, "_blank");
           });
       } else {
-        // TODO: Ovdje dodati da se genericki odradi placanje 3rd party servisom
         let payment = {
           paymentMethod: methodUrlLabel,
           currency: "USD",
@@ -133,7 +144,12 @@ export default {
       }
     };
 
-    return { merchantPaymentMethods, makePayment, makeSubscription };
+    return {
+      merchantPaymentMethods,
+      makePayment,
+      makeSubscription,
+      monthsInInstallment,
+    };
   },
 };
 </script>
