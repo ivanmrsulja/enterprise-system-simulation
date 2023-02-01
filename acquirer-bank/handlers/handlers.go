@@ -209,7 +209,7 @@ func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 	transaction := model.Transaction{PaymentId: paymentId, MerchantId: account.MerchantId, Amount: paymentRequest.Amount}
 	repository.SaveTransaction(transaction)
 
-	json.NewEncoder(w).Encode(dto.BankRedirectResponse{PaymentUrl: "http://127.0.0.1:5174/payment", PaymentId: paymentId})
+	json.NewEncoder(w).Encode(dto.BankRedirectResponse{PaymentUrl: "http://www.sep-banka.com:5174/payment", PaymentId: paymentId})
 }
 
 func AuthenticateMerchant(w http.ResponseWriter, r *http.Request) {
