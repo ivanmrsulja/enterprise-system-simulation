@@ -1,7 +1,7 @@
 package rs.enterprise.paymentserviceprovider.service.impl;
 
-import com.paypal.api.payments.*;
 import com.paypal.api.payments.Currency;
+import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;

@@ -6,6 +6,7 @@ import rs.enterprise.paymentserviceprovider.dto.AcquirerBankPaymentRequestDTO;
 import rs.enterprise.paymentserviceprovider.model.BusinessAccount;
 import rs.enterprise.paymentserviceprovider.model.CustomPayment;
 import rs.enterprise.paymentserviceprovider.model.Merchant;
+import rs.enterprise.paymentserviceprovider.model.enums.TransactionState;
 import rs.enterprise.paymentserviceprovider.service.BankPaymentService;
 import rs.enterprise.paymentserviceprovider.service.BitcoinHashService;
 import rs.enterprise.paymentserviceprovider.service.MerchantService;
@@ -31,11 +32,11 @@ public class PaymentController {
     @Autowired
     private BitcoinHashService bitcoinHashService;
 
-    public static final String PAYPAL_SUCCESS_URL = "/api/payments/success";
-    public static final String PAYPAL_CANCEL_URL = "/api/payments/cancel";
+    private static final String PAYPAL_SUCCESS_URL = "/api/payments/success";
+    private static final String PAYPAL_CANCEL_URL = "/api/payments/cancel";
 
-    public static final String PAYPAL_SUCCESS_SUBSCRIPTION = "/api/payments/confirm-subscription";
-    public static final String PAYPAL_CANCEL_SUBSCRIPTION = "/api/payments/cancel-subscription";
+    private static final String PAYPAL_SUCCESS_SUBSCRIPTION = "/api/payments/confirm-subscription";
+    private static final String PAYPAL_CANCEL_SUBSCRIPTION = "/api/payments/cancel-subscription";
 
     @Autowired
     public PaymentController(PaymentServiceFinder paymentServiceFinder) {
@@ -63,6 +64,7 @@ public class PaymentController {
             }
 
         System.out.println(customPayment);
+        bankPaymentService.setTransactionState(customPayment.getMerchantOrderId(), TransactionState.SUCCESS);
 
         AtomicReference<String> result = new AtomicReference<>("");
         paymentServiceFinder.providers(true).forEachRemaining(provider -> {
@@ -116,6 +118,7 @@ public class PaymentController {
                 customPayment.getTransactionId());
         customPayment.setAmount(temp.getAmount());
         System.out.println(customPayment);
+        bankPaymentService.setTransactionState(customPayment.getMerchantOrderId(), TransactionState.SUCCESS);
 
         AtomicReference<String> result = new AtomicReference<>("");
         paymentServiceFinder.providers(true).forEachRemaining(provider -> {
