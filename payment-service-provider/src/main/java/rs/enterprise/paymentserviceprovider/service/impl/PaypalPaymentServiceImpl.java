@@ -32,7 +32,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         amount.setCurrency(customPayment.getCurrency());
         customPayment.setAmount(BigDecimal.valueOf(customPayment.getAmount())
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
-        amount.setTotal(String.format("%.2f", customPayment.getAmount()));
+        amount.setTotal(String.format("%.2f", customPayment.getAmount()).replace(',','.'));
 
         Transaction transaction = new Transaction();
         transaction.setDescription(customPayment.getDescription());
@@ -173,7 +173,7 @@ public class PaypalPaymentServiceImpl implements PaymentInterface {
         Currency currency = new Currency();
         currency.setCurrency("USD");
         //currency.setValue("10");
-        currency.setValue(String.format("%.2f",amount / numberOfMonths));
+        currency.setValue(String.format("%.2f",amount / numberOfMonths).replace(',','.'));
         paymentDefinition.setAmount(currency);
 
         ChargeModels chargeModels = new ChargeModels();

@@ -122,7 +122,10 @@ export default {
           console.log(response.data);
           if (methodUrlLabel === "paypal") {
             window.open(response.data);
-          } else if (methodUrlLabel === "bitcoin") {
+          } else if (
+            methodUrlLabel === "bitcoin" &&
+            response.data === "success"
+          ) {
             var intervalId = null;
             var varName = function () {
               paymentService.getBitcoinHash().then((response) => {

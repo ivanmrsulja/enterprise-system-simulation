@@ -33,7 +33,7 @@ var BasePCCRedirectPathRoundRobin, _ = roundrobin.New(
 )
 
 var BasePSPRedirectPathRoundRobin, _ = roundrobin.New(
-	&url.URL{Host: "https://localhost:8089/api/bank-payment/final-redirect"},
+	&url.URL{Host: "https://www.psp-sajt.com:8089/api/bank-payment/final-redirect"},
 )
 
 func DelegateResponse(response *http.Response, w http.ResponseWriter) {
@@ -58,6 +58,6 @@ func Authenticated(w http.ResponseWriter, r *http.Request) bool {
 // TODO: ovdje da se podesi CORS
 func SetupResponse(w *http.ResponseWriter, r *http.Request) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-    (*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
-    (*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
