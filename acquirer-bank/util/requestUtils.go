@@ -29,11 +29,11 @@ func LoadApiKey() {
 }
 
 var BasePCCRedirectPathRoundRobin, _ = roundrobin.New(
-	&url.URL{Host: "https://localhost:8083/api/pcc-redirect"},
+	&url.URL{Host: "https://www.sep-banka.com:8083/api/pcc-redirect"},
 )
 
 var BasePSPRedirectPathRoundRobin, _ = roundrobin.New(
-	&url.URL{Host: "https://localhost:8089/api/bank-payment/final-redirect"},
+	&url.URL{Host: "https://www.sep-banka.com:8089/api/bank-payment/final-redirect"},
 )
 
 func DelegateResponse(response *http.Response, w http.ResponseWriter) {
