@@ -3,7 +3,11 @@ package com.rs.elasticsearchservice;
 import com.rs.elasticsearchservice.client.ElasticsearchIndexClient;
 import com.rs.elasticsearchservice.client.LocationIqClient;
 import com.rs.elasticsearchservice.controller.SearchController;
+import com.rs.elasticsearchservice.databaserepository.AuthorityRepository;
+import com.rs.elasticsearchservice.databaserepository.EmployeeRepository;
+import com.rs.elasticsearchservice.model.Authority;
 import com.rs.elasticsearchservice.model.CandidateApplication;
+import com.rs.elasticsearchservice.model.Employee;
 import com.rs.elasticsearchservice.repository.CandidateApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,11 +29,17 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class DbInitializer implements ApplicationRunner {
 
+    private final PasswordEncoder passwordEncoder;
+
     private final CandidateApplicationRepository candidateApplicationRepository;
 
     private final LocationIqClient locationIqClient;
 
     private final ElasticsearchIndexClient indexClient;
+
+    private final AuthorityRepository authorityRepository;
+
+    private final EmployeeRepository employeeRepository;
 
     private static final Logger LOG = Logger.getLogger(SearchController.class.getName());
 
@@ -35,11 +47,14 @@ public class DbInitializer implements ApplicationRunner {
     private String apiKey;
 
     @Override
+    @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
         configureAnalyzer();
 
         populateApplicationIndex();
+
+        populateUsers();
     }
 
     private void configureAnalyzer() throws IOException {
@@ -54,8 +69,8 @@ public class DbInitializer implements ApplicationRunner {
 
         indexClient.openIndex();
 
-        indexClient.dropStatisticData();
-        populateStatisticLogs();
+//        indexClient.dropStatisticData();
+//        populateStatisticLogs();
 
         if(result.getAcknowledged()) {
             log.info("Serbian analyzer configured successfully.");
@@ -91,5 +106,17 @@ public class DbInitializer implements ApplicationRunner {
         LOG.info("STATISTIC-LOG Nis-Marko Markovic (markomarkovic99)-Diligent");
         LOG.info("STATISTIC-LOG Trstenik-Ivan Mrsulja (ivanmrsulja)-Prva Petoletka Namenska");
         LOG.info("STATISTIC-LOG Zrenjanin-Jovan Joksovic (jovo98)-Vega IT");
+    }
+
+    private void populateUsers() {
+        var worker = new Authority("WORKER");
+        var boss = new Authority("BOSS");
+        authorityRepository.save(worker);
+        authorityRepository.save(boss);
+
+        var worker1 = new Employee("CandidateWorker1", passwordEncoder.encode("bpm"), worker);
+        var boss1 = new Employee("CandidateBoss1", passwordEncoder.encode("bpm"), boss);
+        employeeRepository.save(worker1);
+        employeeRepository.save(boss1);
     }
 }
