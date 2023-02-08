@@ -1,0 +1,29 @@
+{
+  "name": "elastic-search-service-front",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vite preview",
+    "build": "vite build",
+    "dev": "vite --host --port 5175",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mdi/font": "5.9.55",
+    "axios": "^1.3.2",
+    "jwt-decode": "^3.1.2",
+    "mitt": "^3.0.0",
+    "pinia": "^2.0.28",
+    "roboto-fontface": "*",
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6",
+    "vuetify": "^3.0.0-beta.0",
+    "webfontloader": "^1.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "vite": "^4.0.0",
+    "vite-plugin-vuetify": "^1.0.0-alpha.12",
+    "vue-cli-plugin-vuetify": "~2.5.8"
+  }
+}
