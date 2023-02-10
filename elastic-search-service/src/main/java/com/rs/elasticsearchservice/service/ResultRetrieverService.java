@@ -62,6 +62,7 @@ public class ResultRetrieverService {
 							application.getEducation(),
 							application.getCvPath(),
 							application.getLetterPath(),
+							application.getAddress(),
 							indexUnit.getHighlightFields()));
 		}
 
@@ -74,13 +75,17 @@ public class ResultRetrieverService {
 		var postfixExpression = expressionTransformer.transformToPostFixNotation(advancedQuery.getExpression());
 		var finalQuery = expressionTransformer.buildQueryFromPostFixExpression(postfixExpression, requiredHighlights);
 
-		var locationResponse = locationIqClient
-				.forwardGeolocation("pk.1a9b36479a565979d1be82d2f63075b7", advancedQuery.getCityName(), "json").get(0);
+		if(!advancedQuery.getCityName().equals("")) {
+			var locationResponse = locationIqClient
+					.forwardGeolocation("pk.1a9b36479a565979d1be82d2f63075b7", advancedQuery.getCityName(), "json").get(0);
 
-		return QueryBuilders.boolQuery()
-				.must(finalQuery)
-				.must(QueryBuilders.geoDistanceQuery("location")
-						.distance(advancedQuery.getDistance(), DistanceUnit.KILOMETERS)
-						.point(locationResponse.getLat(),locationResponse.getLon()));
+			return QueryBuilders.boolQuery()
+					.must(finalQuery)
+					.must(QueryBuilders.geoDistanceQuery("location")
+							.distance(advancedQuery.getDistance(), DistanceUnit.KILOMETERS)
+							.point(locationResponse.getLat(),locationResponse.getLon()));
+		}
+
+		return QueryBuilders.boolQuery().must(finalQuery);
 	}
 }

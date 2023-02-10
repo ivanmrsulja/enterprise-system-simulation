@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.EmptyStackException;
 
 @ControllerAdvice
 public class ErrorHandler {
@@ -18,5 +19,12 @@ public class ErrorHandler {
     @ResponseBody
     ErrorObject handleNotFoundException(HttpServletRequest request, NotFoundException ex) {
         return new ErrorObject(request, ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EmptyStackException.class)
+    @ResponseBody
+    ErrorObject handleNotFoundException(HttpServletRequest request, EmptyStackException ex) {
+        return new ErrorObject(request, "You haven't provided a query.", HttpStatus.BAD_REQUEST);
     }
 }

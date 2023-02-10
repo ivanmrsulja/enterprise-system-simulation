@@ -24,5 +24,7 @@ public class CandidateApplicationDTO {
 
     private String letterPath;
 
+    private String address;
+
     private Map<String, List<String>> highlights;
 }

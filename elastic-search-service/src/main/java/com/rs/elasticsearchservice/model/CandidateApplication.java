@@ -43,16 +43,20 @@ public class CandidateApplication {
     @Field(type = FieldType.Text, store = true, name = "letterPath")
     private String letterPath;
 
+    @Field(type = FieldType.Text, store = true, name = "address")
+    private String address;
+
     @GeoPointField
     @Field(store = true, name = "location")
     private GeoPoint location;
 
-    public CandidateApplication(String name, String surname, String education, String cv, String letter, GeoPoint location) {
+    public CandidateApplication(String name, String surname, String education, String cv, String letter, String address, GeoPoint location) {
         this.name = name;
         this.surname = surname;
         this.education = education;
         this.cv = cv;
         this.letter = letter;
+        this.address = address;
         this.location = location;
     }
 }
