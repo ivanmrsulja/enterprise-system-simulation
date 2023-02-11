@@ -95,22 +95,51 @@
                     </div>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn text color="deep-purple accent-4">
+                    <v-btn
+                        text
+                        color="deep-purple accent-4"
+                        @click="
+                            downloadDocument(
+                                result.cvPath,
+                                result.name + '_' + result.surname + '_CV'
+                            )
+                        "
+                    >
                         Download CV
                     </v-btn>
-                    <v-btn text color="deep-purple accent-4">
+                    <v-btn
+                        text
+                        color="deep-purple accent-4"
+                        @click="
+                            downloadDocument(
+                                result.letterPath,
+                                result.name +
+                                    '_' +
+                                    result.surname +
+                                    '_cover_letter'
+                            )
+                        "
+                    >
                         Download cover letter
                     </v-btn>
                 </v-card-actions>
             </v-card>
         </v-row>
     </v-container>
+    <v-snackbar v-model="snackbar" :timeout="snackbarTimeout">
+        {{ snackbarText }}
+
+        <v-btn color="blue" text @click="snackbar = false" style="float: right">
+            Close
+        </v-btn>
+    </v-snackbar>
 </template>
 
 <script>
 import { ref } from "vue";
 import Vue3TagsInput from "vue3-tags-input";
 import { searchService } from "../services/searchService";
+import { downloadService } from "../services/downloadService";
 
 export default {
     components: {
@@ -123,6 +152,10 @@ export default {
         const distance = ref(0);
         const defaultOperator = "OR";
         const searchResults = ref([]);
+
+        const snackbar = ref(false);
+        const snackbarText = ref("\n\n\nInvalid query syntax.");
+        const snackbarTimeout = ref(2000);
 
         const handleChangeTag = (tagList) => {
             if (tagList.length === 0) {
@@ -170,7 +203,7 @@ export default {
                 if (operators.includes(token)) {
                     if (lastTokenOperator || index === 0) {
                         console.log();
-                        alert("aaa");
+                        snackbar.value = true;
                         return;
                     }
                     lastTokenOperator = true;
@@ -195,16 +228,24 @@ export default {
             });
         };
 
+        const downloadDocument = (name, type) => {
+            downloadService.downloadPDF(name, type);
+        };
+
         return {
             tags,
             phrase,
             city,
             distance,
             searchResults,
+            snackbar,
+            snackbarText,
+            snackbarTimeout,
             handleChangeTag,
             handleRemoveTag,
             addPhrase,
             search,
+            downloadDocument,
         };
     },
 };

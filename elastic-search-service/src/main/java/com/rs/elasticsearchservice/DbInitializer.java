@@ -87,10 +87,16 @@ public class DbInitializer implements ApplicationRunner {
 
         candidateApplicationRepository.deleteAll();
         CandidateApplication candidate1 = new CandidateApplication("Ivan", "Mrsulja", "BSC", TestingTextSnippets.cv1, TestingTextSnippets.letter1, "Maksima Gorkog 17a, Novi Sad", new GeoPoint(addr1.getLat(),addr1.getLon()));
+        candidate1.setCvPath("cv1.pdf");
+        candidate1.setLetterPath("letter1.pdf");
         candidateApplicationRepository.save(candidate1);
         CandidateApplication candidate2 = new CandidateApplication("Milos", "Popovic", "PHD", TestingTextSnippets.cv2, TestingTextSnippets.letter2, "Bulevar Oslobodjenja 16, Novi Sad", new GeoPoint(addr2.getLat(),addr2.getLon()));
+        candidate2.setCvPath("cv2.pdf");
+        candidate2.setLetterPath("letter2.pdf");
         candidateApplicationRepository.save(candidate2);
         CandidateApplication candidate3 = new CandidateApplication("Veljko", "Tosic", "MSC", TestingTextSnippets.cv3, TestingTextSnippets.letter3, "Vidikovacki Venac 27, Beograd, Rakovica", new GeoPoint(addr3.getLat(),addr3.getLon()));
+        candidate3.setCvPath("cv3.pdf");
+        candidate3.setLetterPath("letter3.pdf");
         candidateApplicationRepository.save(candidate3);
 
 //        Page<CandidateApplication> candidatesByName
