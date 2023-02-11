@@ -1,5 +1,6 @@
 package com.rs.elasticsearchservice.config;
 
+import com.rs.elasticsearchservice.exception.BadApiKeyException;
 import com.rs.elasticsearchservice.exception.NotFoundException;
 import com.rs.elasticsearchservice.util.ErrorObject;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,13 @@ public class ErrorHandler {
         return new ErrorObject(request, ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseBody
+    ErrorObject handleFileNotFoundException(HttpServletRequest request, FileNotFoundException ex) {
+        return new ErrorObject(request, "Specified file does not exist.", HttpStatus.NOT_FOUND);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmptyStackException.class)
     @ResponseBody
@@ -29,10 +37,10 @@ public class ErrorHandler {
         return new ErrorObject(request, "You haven't provided a query.", HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadApiKeyException.class)
     @ResponseBody
-    ErrorObject handleFileNotFoundException(HttpServletRequest request, FileNotFoundException ex) {
-        return new ErrorObject(request, "Specified file does not exist.", HttpStatus.NOT_FOUND);
+    ErrorObject handleBadApiKeyException(HttpServletRequest request, BadApiKeyException ex) {
+        return new ErrorObject(request, ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

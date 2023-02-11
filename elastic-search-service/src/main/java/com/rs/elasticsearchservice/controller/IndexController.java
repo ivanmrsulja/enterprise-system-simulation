@@ -1,5 +1,6 @@
 package com.rs.elasticsearchservice.controller;
 
+import com.rs.elasticsearchservice.annotation.CheckApiKey;
 import com.rs.elasticsearchservice.dto.CandidateApplicationIndexDTO;
 import com.rs.elasticsearchservice.dto.StatisticLogDTO;
 import com.rs.elasticsearchservice.service.IndexingService;
@@ -25,13 +26,15 @@ public class IndexController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void index(CandidateApplicationIndexDTO indexingUnit) throws IOException {
+    @CheckApiKey
+    public void index(CandidateApplicationIndexDTO indexingUnit, @RequestHeader("X-API-KEY") String acquiredApiKey) throws IOException {
         indexingService.indexApplication(indexingUnit);
     }
 
     @PostMapping("/statistic-log")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createStatisticLog(@RequestBody StatisticLogDTO statisticLog) {
+    @CheckApiKey
+    public void createStatisticLog(@RequestBody StatisticLogDTO statisticLog, @RequestHeader("X-API-KEY") String acquiredApiKey) {
         LOG.info("STATISTIC-LOG " + statisticLog.getCity() + "-" + statisticLog.getUser() + "-" + statisticLog.getCompany());
     }
 }
