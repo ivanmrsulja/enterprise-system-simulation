@@ -29,19 +29,11 @@ axios.interceptors.request.use(
 router.beforeEach((to, from, next) => {
     const { authenticated, authorities } = to.meta;
 
-    if (to.name === "home" && sessionStorage.getItem("jwt")) {
-        next({ name: "search" });
-    }
-
     if (authenticated) {
         let jwt = sessionStorage.getItem("jwt");
         if (jwt) {
             let decodedToken = jwt_decode(jwt);
-            if (
-                authorities.some((element) =>
-                    decodedToken.roles.includes(element)
-                )
-            ) {
+            if (authorities.some((element) => decodedToken.roles === element)) {
                 next();
             } else {
                 next({ name: "home" });

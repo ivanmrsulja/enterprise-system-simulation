@@ -184,7 +184,7 @@ export default {
         };
 
         const handleRemoveTag = (tagIndex) => {
-            tags.value.splice(tagIndex, 1);
+            tags.value.splice(tagIndex, 0);
         };
 
         const addPhrase = () => {

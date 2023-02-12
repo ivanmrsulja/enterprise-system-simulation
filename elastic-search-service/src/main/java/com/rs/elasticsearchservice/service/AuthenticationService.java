@@ -40,7 +40,7 @@ public class AuthenticationService implements UserDetailsService {
     public String fetchToken(String fetchToken) throws Exception {
         var loginToken = loginTokenRepository.fetchToken(fetchToken).orElseThrow(() ->
                 new NotFoundException("Invalid fetch token."));
-        loginTokenRepository.delete(loginToken);
+//        loginTokenRepository.delete(loginToken);
         return encryptionUtil.decrypt(loginToken.getRealToken());
     }
 }

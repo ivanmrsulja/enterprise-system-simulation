@@ -27,6 +27,8 @@ export default {
                         router.push("/search");
                     } else if (decodedToken.roles === "BOSS") {
                         router.push("/report");
+                    } else if (decodedToken.roles === "INDEX_WORKER") {
+                        router.push("/index-application");
                     }
                 });
             }, 1000);

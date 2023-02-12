@@ -118,12 +118,16 @@ public class DbInitializer implements ApplicationRunner {
     private void populateUsers() {
         var worker = new Authority("WORKER");
         var boss = new Authority("BOSS");
+        var indexWorker = new Authority("INDEX_WORKER");
         authorityRepository.save(worker);
         authorityRepository.save(boss);
+        authorityRepository.save(indexWorker);
 
         var worker1 = new Employee("CandidateWorker1", passwordEncoder.encode("bpm"), worker);
         var boss1 = new Employee("CandidateBoss1", passwordEncoder.encode("bpm"), boss);
+        var companyWorker1 = new Employee("CandidateIndexer1", passwordEncoder.encode("bpm"), indexWorker);
         employeeRepository.save(worker1);
         employeeRepository.save(boss1);
+        employeeRepository.save(companyWorker1);
     }
 }

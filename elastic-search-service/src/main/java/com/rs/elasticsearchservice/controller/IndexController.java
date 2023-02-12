@@ -26,8 +26,7 @@ public class IndexController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @CheckApiKey
-    public void index(CandidateApplicationIndexDTO indexingUnit, @RequestHeader("X-API-KEY") String acquiredApiKey) throws IOException {
+    public void index(CandidateApplicationIndexDTO indexingUnit) throws IOException {
         indexingService.indexApplication(indexingUnit);
     }
 

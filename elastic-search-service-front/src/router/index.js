@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 
-const roles = { worker: "WORKER", boss: "BOSS" };
+const roles = { worker: "WORKER", boss: "BOSS", indexer: "INDEX_WORKER" };
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +30,7 @@ const router = createRouter({
             component: () => import("../views/SearchView.vue"),
             meta: {
                 authenticated: true,
-                authorities: [roles.worker, roles.boss],
+                authorities: [roles.worker, roles.boss, roles.indexer],
             },
         },
         {
@@ -40,6 +40,15 @@ const router = createRouter({
             meta: {
                 authenticated: true,
                 authorities: [roles.boss],
+            },
+        },
+        {
+            path: "/index-application",
+            name: "index",
+            component: () => import("../views/IndexView.vue"),
+            meta: {
+                authenticated: true,
+                authorities: [roles.indexer],
             },
         },
     ],

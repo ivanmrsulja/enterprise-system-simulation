@@ -58,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //api
                 .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/authenticate/{fetchToken}").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/index").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/index/statistic-log").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/index").hasAuthority("INDEX_WORKER")
                 .anyRequest().fullyAuthenticated();
 
         http.headers().xssProtection().and().contentSecurityPolicy("script-src 'self'");

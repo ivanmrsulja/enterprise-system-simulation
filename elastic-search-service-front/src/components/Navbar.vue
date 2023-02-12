@@ -10,6 +10,13 @@
                 >Browse reports</router-link
             >
         </li>
+        <li :hidden="roles === 'INDEX_WORKER' ? false : true">
+            <router-link
+                :class="path == '/index-application' ? 'active' : ''"
+                to="/index-application"
+                >Index application</router-link
+            >
+        </li>
     </ul>
 </template>
 

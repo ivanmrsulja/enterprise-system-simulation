@@ -40,6 +40,7 @@ public class IndexingService {
         application.setName(indexingUnit.getName());
         application.setSurname(indexingUnit.getSurname());
         application.setEducation(indexingUnit.getEducation());
+        application.setAddress(indexingUnit.getAddress());
 
         var location = locationIqClient.
                 forwardGeolocation(apiKey, indexingUnit.getAddress(), "json").get(0);
