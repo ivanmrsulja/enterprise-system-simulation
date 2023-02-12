@@ -34,6 +34,7 @@
                         label="Add phrase"
                         placeholder="Insert phrase (<region>:<phrase>)"
                         v-model="phrase"
+                        @keypress.enter="addPhrase()"
                     ></v-text-field>
                     <v-btn
                         class="mx-2"
@@ -73,7 +74,7 @@
                     </p>
                     <p>Education: {{ result.education }}</p>
                     <br />
-                    <p>Location: {{ result.address }}</p>
+                    <p>Address: {{ result.address }}</p>
                     <br />
                     <div class="text--primary">
                         <p v-if="result.highlights.cv">CV:</p>
@@ -174,7 +175,11 @@ export default {
             ) {
                 tags.value[tags.value.length - 1] = potential_operator;
                 return;
-            } else if (!potential_operator.includes(":")) {
+            } else if (
+                !potential_operator.includes(":") ||
+                potential_operator.startsWith(":") ||
+                potential_operator.endsWith(":")
+            ) {
                 tags.value.pop();
                 return;
             }

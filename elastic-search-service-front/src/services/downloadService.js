@@ -12,7 +12,7 @@ class DownloadService {
                 }
             )
             .then((response) => {
-                this.initialteDownload(response, documentType);
+                this.initialteDownload(response, documentType, "pdf");
             })
             .catch(console.error);
     }
