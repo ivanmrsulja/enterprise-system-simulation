@@ -70,8 +70,8 @@ public class DbInitializer implements ApplicationRunner {
 
         indexClient.openIndex();
 
-//        indexClient.dropStatisticData();
-//        populateStatisticLogs();
+        indexClient.dropStatisticData();
+        populateStatisticLogs();
 
         if(result.getAcknowledged()) {
             log.info("Serbian analyzer configured successfully.");
