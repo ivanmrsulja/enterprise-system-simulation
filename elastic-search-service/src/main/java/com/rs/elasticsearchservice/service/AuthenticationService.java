@@ -31,14 +31,14 @@ public class AuthenticationService implements UserDetailsService {
 
     public String getRedirectUrl(String token) throws Exception {
         var fetchToken = UUID.randomUUID().toString();
-        var newLoginToken = new LoginToken(encryptionUtil.encrypt(token), fetchToken);
+        var newLoginToken = new LoginToken(encryptionUtil.encrypt(token), encryptionUtil.encrypt(fetchToken));
         loginTokenRepository.save(newLoginToken);
 
         return "http://127.0.0.1:5175/login/" + fetchToken;
     }
 
     public String fetchToken(String fetchToken) throws Exception {
-        var loginToken = loginTokenRepository.fetchToken(fetchToken).orElseThrow(() ->
+        var loginToken = loginTokenRepository.fetchToken(encryptionUtil.encrypt(fetchToken)).orElseThrow(() ->
                 new NotFoundException("Invalid fetch token."));
 //        loginTokenRepository.delete(loginToken);
         return encryptionUtil.decrypt(loginToken.getRealToken());
